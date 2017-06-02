@@ -1,0 +1,10 @@
+C:\src\github\xpiritbv\LeaderboardsGlobalDevopsBootcamp\gdbcLeaderBoard\gdbcLeaderBoard\bin\Debug\netcoreapp1.1\gdbcLeaderBoard.deps.json
+C:\src\github\xpiritbv\LeaderboardsGlobalDevopsBootcamp\gdbcLeaderBoard\gdbcLeaderBoard\bin\Debug\netcoreapp1.1\gdbcLeaderBoard.runtimeconfig.json
+C:\src\github\xpiritbv\LeaderboardsGlobalDevopsBootcamp\gdbcLeaderBoard\gdbcLeaderBoard\bin\Debug\netcoreapp1.1\gdbcLeaderBoard.runtimeconfig.dev.json
+C:\src\github\xpiritbv\LeaderboardsGlobalDevopsBootcamp\gdbcLeaderBoard\gdbcLeaderBoard\bin\Debug\netcoreapp1.1\gdbcLeaderBoard.dll
+C:\src\github\xpiritbv\LeaderboardsGlobalDevopsBootcamp\gdbcLeaderBoard\gdbcLeaderBoard\bin\Debug\netcoreapp1.1\gdbcLeaderBoard.pdb
+C:\src\github\xpiritbv\LeaderboardsGlobalDevopsBootcamp\gdbcLeaderBoard\gdbcLeaderBoard\obj\Debug\netcoreapp1.1\gdbcLeaderBoard.csprojResolveAssemblyReference.cache
+C:\src\github\xpiritbv\LeaderboardsGlobalDevopsBootcamp\gdbcLeaderBoard\gdbcLeaderBoard\obj\Debug\netcoreapp1.1\UserSecretsAssemblyInfo.cs
+C:\src\github\xpiritbv\LeaderboardsGlobalDevopsBootcamp\gdbcLeaderBoard\gdbcLeaderBoard\obj\Debug\netcoreapp1.1\gdbcLeaderBoard.AssemblyInfo.cs
+C:\src\github\xpiritbv\LeaderboardsGlobalDevopsBootcamp\gdbcLeaderBoard\gdbcLeaderBoard\obj\Debug\netcoreapp1.1\gdbcLeaderBoard.dll
+C:\src\github\xpiritbv\LeaderboardsGlobalDevopsBootcamp\gdbcLeaderBoard\gdbcLeaderBoard\obj\Debug\netcoreapp1.1\gdbcLeaderBoard.pdb
