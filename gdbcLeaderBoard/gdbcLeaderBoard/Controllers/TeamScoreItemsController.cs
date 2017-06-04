@@ -50,7 +50,7 @@ namespace gdbcLeaderBoard.Controllers
         public IActionResult Create()
         {
             ViewData["ChallengeID"] = new SelectList(_context.Challenge, "Id", "Name");
-            ViewData["TeamID"] = new SelectList(_context.Team, "Id", "Name");
+            ViewData["TeamID"] = new SelectList(_context.Team.Select(t => new { Id = t.Id, Name = t.Venue.Name + " : " + t.Name }).OrderBy(t=> t.Name), "Id", "Name");
             return View();
         }
 
