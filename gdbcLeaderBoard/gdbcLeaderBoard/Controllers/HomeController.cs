@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using gdbcLeaderBoard.Data;
 using gdbcLeaderBoard.Models.HomeViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace gdbcLeaderBoard.Controllers
 {
@@ -20,26 +21,19 @@ namespace gdbcLeaderBoard.Controllers
         public IActionResult Index()
         {
             ScoreOverviewViewModel vm = new ScoreOverviewViewModel();
-            vm.TeamScores = new List<TeamScoreViewModel>();
             vm.VenueScores = new List<VenueScoreViewModel>();
 
-            var teamscores = _context.Team.OrderByDescending(t => t.Scores.Sum(s => s.Challenge.Points)).Take(10);
-            foreach(var team in teamscores)
-            {
-                if (team.Scores != null)
-                {
-                    vm.TeamScores.Add(new TeamScoreViewModel() { Team = team.Name, Score = team.Scores.Sum(s => s.Challenge.Points) });
-                }
-            }
+            var teamScores = _context.Team.Include(t => t.Scores).Select(tt => 
+                new TeamScoreViewModel{ Team = tt.Name, Score = tt.Scores.Sum(s => s.Challenge.Points) }
+            ).ToList();
 
-            var venueScores = _context.Venue.OrderByDescending(v => v.Teams.Sum(t => t.Scores.Sum(s => s.Challenge.Points)));
-            foreach (var venue in venueScores)
-            {
-                if (venue.Teams != null)
-                {
-                    vm.VenueScores.Add(new VenueScoreViewModel() { Venue = venue.Name, Score = venue.Teams.Sum(t => t.Scores.Sum(s => s.Challenge.Points)) });
-                }
-            }
+            vm.TeamScores = teamScores;
+
+            var venueScores = _context.Venue.Include(v => v.Teams).Select(vs =>
+                new VenueScoreViewModel { Venue = vs.Name, Score = vs.Teams.Sum(s => s.Scores.Sum(sc => sc.Challenge.Points)) }
+            ).ToList();
+
+            vm.VenueScores = venueScores;
 
             return View(vm);
         }
