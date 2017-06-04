@@ -24,7 +24,7 @@ namespace gdbcLeaderBoard.Controllers
             vm.VenueScores = new List<VenueScoreViewModel>();
 
             var teamScores = _context.Team.Include(t => t.Scores).Select(tt => 
-                new TeamScoreViewModel{ Team = tt.Name, Score = tt.Scores.Sum(s => s.Challenge.Points) }
+                new TeamScoreViewModel{Venue = tt.Venue.Name, Team = tt.Name, Score = tt.Scores.Sum(s => s.Challenge.Points) }
             ).ToList();
 
             vm.TeamScores = teamScores;

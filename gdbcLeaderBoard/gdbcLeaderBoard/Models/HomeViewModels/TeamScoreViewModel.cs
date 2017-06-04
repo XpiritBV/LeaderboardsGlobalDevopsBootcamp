@@ -7,6 +7,7 @@ namespace gdbcLeaderBoard.Models.HomeViewModels
 {
     public class TeamScoreViewModel
     {
+        public string Venue { get; set; }
         public string Team { get; set; }
         public int Score { get; set; }
     }
