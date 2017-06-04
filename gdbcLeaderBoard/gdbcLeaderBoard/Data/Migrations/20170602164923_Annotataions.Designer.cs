@@ -8,9 +8,10 @@ using gdbcLeaderBoard.Data;
 namespace gdbcLeaderBoard.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170602164923_Annotataions")]
+    partial class Annotataions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -89,11 +90,11 @@ namespace gdbcLeaderBoard.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<int>("VenueID");
+                    b.Property<int>("VenueId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("VenueID");
+                    b.HasIndex("VenueId");
 
                     b.ToTable("Team");
                 });
@@ -245,7 +246,7 @@ namespace gdbcLeaderBoard.Data.Migrations
                 {
                     b.HasOne("gdbcLeaderBoard.Models.Venue", "Venue")
                         .WithMany("Teams")
-                        .HasForeignKey("VenueID")
+                        .HasForeignKey("VenueId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

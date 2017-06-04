@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using gdbcLeaderBoard.Data;
 using gdbcLeaderBoard.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace gdbcLeaderBoard.Controllers
 {
+    [Authorize]
     public class TeamsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,7 +24,7 @@ namespace gdbcLeaderBoard.Controllers
         // GET: Teams
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Team.ToListAsync());
+            return View(await _context.Team.Include(t=> t.Venue).ToListAsync());
         }
 
         // GET: Teams/Details/5
@@ -46,7 +48,16 @@ namespace gdbcLeaderBoard.Controllers
         // GET: Teams/Create
         public IActionResult Create()
         {
+
+            ViewData["Venues"] = GetVenues();
+
             return View();
+        }
+
+        private IEnumerable<SelectListItem> GetVenues()
+        {
+            var venues = _context.Venue.ToList();
+            return new SelectList(venues, "Id", "Name");
         }
 
         // POST: Teams/Create
@@ -54,7 +65,7 @@ namespace gdbcLeaderBoard.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Team team)
+        public async Task<IActionResult> Create([Bind("Id,Name","VenueID")] Team team)
         {
             if (ModelState.IsValid)
             {
@@ -74,10 +85,13 @@ namespace gdbcLeaderBoard.Controllers
             }
 
             var team = await _context.Team.SingleOrDefaultAsync(m => m.Id == id);
+
             if (team == null)
             {
                 return NotFound();
             }
+
+            ViewData["Venues"] = GetVenues();
             return View(team);
         }
 
@@ -86,7 +100,7 @@ namespace gdbcLeaderBoard.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Team team)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name", "VenueID")] Team team)
         {
             if (id != team.Id)
             {
