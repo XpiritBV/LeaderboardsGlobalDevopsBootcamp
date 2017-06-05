@@ -21,17 +21,25 @@ namespace gdbcLeaderBoard.Controllers
         public IActionResult Index()
         {
             ScoreOverviewViewModel vm = new ScoreOverviewViewModel();
-            vm.VenueScores = new List<VenueScoreViewModel>();
-
-            var teamScores = _context.Team.Include(t => t.Scores).Select(tt => 
-                new TeamScoreViewModel{Venue = tt.Venue.Name, Team = tt.Name, Score = tt.Scores.Sum(s => s.Challenge.Points) }
-            ).ToList();
+           
+            var teamScores = _context.Team.Select(tt =>
+                new TeamScoreViewModel { Venue = tt.Venue.Name, Team = tt.Name, Score = tt.Scores.Sum(s => s.Challenge.Points) }
+            )
+            .OrderByDescending(o => o.Score)
+            .ToList();
+            
 
             vm.TeamScores = teamScores;
 
-            var venueScores = _context.Venue.Include(v => v.Teams).Select(vs =>
-                new VenueScoreViewModel { Venue = vs.Name, Score = vs.Teams.Sum(s => s.Scores.Sum(sc => sc.Challenge.Points)) }
-            ).ToList();
+            var venueScores = _context.Team.Select(t =>
+                new VenueScoreViewModel { Venue = t.Venue.Name, Score = t.Scores.Sum(s => s.Challenge.Points) }
+            )
+            .GroupBy(x => x.Venue)
+            .Select(x =>
+                new VenueScoreViewModel { Venue = x.Key, Score = x.Sum(s => s.Score) }
+            )
+            .OrderByDescending(o => o.Score)
+            .ToList();
 
             vm.VenueScores = venueScores;
 
