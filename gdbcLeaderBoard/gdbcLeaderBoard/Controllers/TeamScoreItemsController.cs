@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using gdbcLeaderBoard.Data;
 using gdbcLeaderBoard.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace gdbcLeaderBoard.Controllers
 {
