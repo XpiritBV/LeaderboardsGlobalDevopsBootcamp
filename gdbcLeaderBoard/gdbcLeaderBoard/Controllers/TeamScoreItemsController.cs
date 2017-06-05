@@ -7,27 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using gdbcLeaderBoard.Data;
 using gdbcLeaderBoard.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace gdbcLeaderBoard.Controllers
 {
-    [Authorize]
-    public class TeamsController : Controller
+    public class TeamScoreItemsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public TeamsController(ApplicationDbContext context)
+        public TeamScoreItemsController(ApplicationDbContext context)
         {
             _context = context;    
         }
 
-        // GET: Teams
+        // GET: TeamScoreItems
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Team.Include(t=> t.Venue).ToListAsync());
+            var applicationDbContext = _context.TeamScoreItem.Include(t => t.Challenge).Include(t => t.Team);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Teams/Details/5
+        // GET: TeamScoreItems/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,48 +34,45 @@ namespace gdbcLeaderBoard.Controllers
                 return NotFound();
             }
 
-            var team = await _context.Team
+            var teamScoreItem = await _context.TeamScoreItem
+                .Include(t => t.Challenge)
+                .Include(t => t.Team)
                 .SingleOrDefaultAsync(m => m.Id == id);
-            if (team == null)
+            if (teamScoreItem == null)
             {
                 return NotFound();
             }
 
-            return View(team);
+            return View(teamScoreItem);
         }
 
-        // GET: Teams/Create
+        // GET: TeamScoreItems/Create
         public IActionResult Create()
         {
-
-            ViewData["Venues"] = GetVenues();
-
+            ViewData["ChallengeID"] = new SelectList(_context.Challenge, "Id", "Name");
+            ViewData["TeamID"] = new SelectList(_context.Team.Select(t => new { Id = t.Id, Name = t.Venue.Name + " : " + t.Name }).OrderBy(t=> t.Name), "Id", "Name");
             return View();
         }
 
-        private IEnumerable<SelectListItem> GetVenues()
-        {
-            var venues = _context.Venue.ToList();
-            return new SelectList(venues, "Id", "Name");
-        }
-
-        // POST: Teams/Create
+        // POST: TeamScoreItems/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name","VenueID")] Team team)
+        public async Task<IActionResult> Create([Bind("Id,ChallengeID,TeamID")] TeamScoreItem teamScoreItem)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(team);
+                _context.Add(teamScoreItem);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(team);
+            ViewData["ChallengeID"] = new SelectList(_context.Challenge, "Id", "Name", teamScoreItem.ChallengeID);
+            ViewData["TeamID"] = new SelectList(_context.Team, "Id", "Name", teamScoreItem.TeamID);
+            return View(teamScoreItem);
         }
 
-        // GET: Teams/Edit/5
+        // GET: TeamScoreItems/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,25 +80,24 @@ namespace gdbcLeaderBoard.Controllers
                 return NotFound();
             }
 
-            var team = await _context.Team.SingleOrDefaultAsync(m => m.Id == id);
-
-            if (team == null)
+            var teamScoreItem = await _context.TeamScoreItem.SingleOrDefaultAsync(m => m.Id == id);
+            if (teamScoreItem == null)
             {
                 return NotFound();
             }
-
-            ViewData["Venues"] = GetVenues();
-            return View(team);
+            ViewData["ChallengeID"] = new SelectList(_context.Challenge, "Id", "Name", teamScoreItem.ChallengeID);
+            ViewData["TeamID"] = new SelectList(_context.Team, "Id", "Name", teamScoreItem.TeamID);
+            return View(teamScoreItem);
         }
 
-        // POST: Teams/Edit/5
+        // POST: TeamScoreItems/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name", "VenueID")] Team team)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ChallengeID,TeamID")] TeamScoreItem teamScoreItem)
         {
-            if (id != team.Id)
+            if (id != teamScoreItem.Id)
             {
                 return NotFound();
             }
@@ -111,12 +106,12 @@ namespace gdbcLeaderBoard.Controllers
             {
                 try
                 {
-                    _context.Update(team);
+                    _context.Update(teamScoreItem);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TeamExists(team.Id))
+                    if (!TeamScoreItemExists(teamScoreItem.Id))
                     {
                         return NotFound();
                     }
@@ -127,10 +122,12 @@ namespace gdbcLeaderBoard.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            return View(team);
+            ViewData["ChallengeID"] = new SelectList(_context.Challenge, "Id", "Name", teamScoreItem.ChallengeID);
+            ViewData["TeamID"] = new SelectList(_context.Team, "Id", "Name", teamScoreItem.TeamID);
+            return View(teamScoreItem);
         }
 
-        // GET: Teams/Delete/5
+        // GET: TeamScoreItems/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -138,30 +135,32 @@ namespace gdbcLeaderBoard.Controllers
                 return NotFound();
             }
 
-            var team = await _context.Team
+            var teamScoreItem = await _context.TeamScoreItem
+                .Include(t => t.Challenge)
+                .Include(t => t.Team)
                 .SingleOrDefaultAsync(m => m.Id == id);
-            if (team == null)
+            if (teamScoreItem == null)
             {
                 return NotFound();
             }
 
-            return View(team);
+            return View(teamScoreItem);
         }
 
-        // POST: Teams/Delete/5
+        // POST: TeamScoreItems/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var team = await _context.Team.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Team.Remove(team);
+            var teamScoreItem = await _context.TeamScoreItem.SingleOrDefaultAsync(m => m.Id == id);
+            _context.TeamScoreItem.Remove(teamScoreItem);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
-        private bool TeamExists(int id)
+        private bool TeamScoreItemExists(int id)
         {
-            return _context.Team.Any(e => e.Id == id);
+            return _context.TeamScoreItem.Any(e => e.Id == id);
         }
     }
 }

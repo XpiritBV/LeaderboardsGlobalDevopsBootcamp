@@ -28,5 +28,7 @@ namespace gdbcLeaderBoard.Data
         public DbSet<gdbcLeaderBoard.Models.Venue> Venue { get; set; }
 
         public DbSet<gdbcLeaderBoard.Models.Team> Team { get; set; }
+
+        public DbSet<gdbcLeaderBoard.Models.TeamScoreItem> TeamScoreItem { get; set; }
     }
 }

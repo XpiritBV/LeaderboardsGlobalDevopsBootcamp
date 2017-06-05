@@ -7,22 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using gdbcLeaderBoard.Data;
 using gdbcLeaderBoard.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace gdbcLeaderBoard.Controllers
 {
+    [Authorize]
     public class VenuesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
         public VenuesController(ApplicationDbContext context)
         {
-            _context = context;    
+            _context = context;
         }
 
         // GET: Venues
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Venue.ToListAsync());
+            return View(await _context.Venue.Include(u => u.VenueAdmin).ToListAsync());
         }
 
         // GET: Venues/Details/5
@@ -46,15 +48,17 @@ namespace gdbcLeaderBoard.Controllers
         // GET: Venues/Create
         public IActionResult Create()
         {
+            ViewData["ApplicationUsers"] = new SelectList(_context.Users, "Id", "Email");
             return View();
         }
+
 
         // POST: Venues/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Venue venue)
+        public async Task<IActionResult> Create([Bind("Id,Name,VenueAdminID")] Venue venue)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +66,8 @@ namespace gdbcLeaderBoard.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+            ViewData["ApplicationUsers"] = new SelectList(_context.Users, "Id", "Email", venue.VenueAdminID);
+
             return View(venue);
         }
 
@@ -78,6 +84,8 @@ namespace gdbcLeaderBoard.Controllers
             {
                 return NotFound();
             }
+
+            ViewBag.ApplicationUsers = new SelectList(_context.Users.ToList(), "Id", "Email", venue.VenueAdminID);
             return View(venue);
         }
 
@@ -86,7 +94,7 @@ namespace gdbcLeaderBoard.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Venue venue)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,VenueAdminID")] Venue venue)
         {
             if (id != venue.Id)
             {
@@ -113,6 +121,8 @@ namespace gdbcLeaderBoard.Controllers
                 }
                 return RedirectToAction("Index");
             }
+            ViewBag.ApplicationUsers = new SelectList(_context.Users.ToList(), "Id", "Email", venue.VenueAdminID);
+
             return View(venue);
         }
 
@@ -131,6 +141,8 @@ namespace gdbcLeaderBoard.Controllers
                 return NotFound();
             }
 
+            ViewBag.ApplicationUsers = new SelectList(_context.Users.ToList(), "Id", "Email", venue.VenueAdminID);
+            
             return View(venue);
         }
 

@@ -11,6 +11,13 @@
   <PropertyGroup>
     <UserSecretsId>aspnet-gdbcLeaderBoard-b3b034a6-874e-4104-ab84-bfe4d83c40b6</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\EF.Models\**" />
+    <Content Remove="Data\EF.Models\**" />
+    <EmbeddedResource Remove="Data\EF.Models\**" />
+    <None Remove="Data\EF.Models\**" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
@@ -32,9 +39,6 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.1" />
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.1" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\EF.Models\" />
   </ItemGroup>
 
 </Project>

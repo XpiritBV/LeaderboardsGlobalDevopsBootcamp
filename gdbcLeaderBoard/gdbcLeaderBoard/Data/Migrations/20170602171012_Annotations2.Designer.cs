@@ -8,9 +8,10 @@ using gdbcLeaderBoard.Data;
 namespace gdbcLeaderBoard.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170602171012_Annotations2")]
+    partial class Annotations2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -103,15 +104,15 @@ namespace gdbcLeaderBoard.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("ChallengeID");
+                    b.Property<int>("ChallengeId");
 
-                    b.Property<int>("TeamID");
+                    b.Property<int>("TeamId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChallengeID");
+                    b.HasIndex("ChallengeId");
 
-                    b.HasIndex("TeamID");
+                    b.HasIndex("TeamId");
 
                     b.ToTable("TeamScoreItem");
                 });
@@ -253,12 +254,12 @@ namespace gdbcLeaderBoard.Data.Migrations
                 {
                     b.HasOne("gdbcLeaderBoard.Models.Challenge", "Challenge")
                         .WithMany()
-                        .HasForeignKey("ChallengeID")
+                        .HasForeignKey("ChallengeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("gdbcLeaderBoard.Models.Team", "Team")
                         .WithMany("Scores")
-                        .HasForeignKey("TeamID")
+                        .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

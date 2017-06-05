@@ -8,9 +8,10 @@ using gdbcLeaderBoard.Data;
 namespace gdbcLeaderBoard.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170602164923_Annotataions")]
+    partial class Annotataions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -89,11 +90,11 @@ namespace gdbcLeaderBoard.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<int>("VenueID");
+                    b.Property<int>("VenueId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("VenueID");
+                    b.HasIndex("VenueId");
 
                     b.ToTable("Team");
                 });
@@ -103,15 +104,15 @@ namespace gdbcLeaderBoard.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("ChallengeID");
+                    b.Property<int>("ChallengeId");
 
-                    b.Property<int>("TeamID");
+                    b.Property<int>("TeamId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChallengeID");
+                    b.HasIndex("ChallengeId");
 
-                    b.HasIndex("TeamID");
+                    b.HasIndex("TeamId");
 
                     b.ToTable("TeamScoreItem");
                 });
@@ -245,7 +246,7 @@ namespace gdbcLeaderBoard.Data.Migrations
                 {
                     b.HasOne("gdbcLeaderBoard.Models.Venue", "Venue")
                         .WithMany("Teams")
-                        .HasForeignKey("VenueID")
+                        .HasForeignKey("VenueId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -253,12 +254,12 @@ namespace gdbcLeaderBoard.Data.Migrations
                 {
                     b.HasOne("gdbcLeaderBoard.Models.Challenge", "Challenge")
                         .WithMany()
-                        .HasForeignKey("ChallengeID")
+                        .HasForeignKey("ChallengeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("gdbcLeaderBoard.Models.Team", "Team")
                         .WithMany("Scores")
-                        .HasForeignKey("TeamID")
+                        .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

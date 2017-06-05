@@ -20,6 +20,13 @@
             </div>
         </div>
         <div class="form-group">
+            <label asp-for="VenueAdminID" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="VenueAdminID" class="form-control" asp-items="ViewBag.ApplicationUsers"></select>
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
