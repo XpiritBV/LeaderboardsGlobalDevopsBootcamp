@@ -10,6 +10,7 @@ using gdbcLeaderBoard.Models;
 
 namespace gdbcLeaderBoard.Controllers
 {
+    [Authorize]
     public class ChallengesController : Controller
     {
         private readonly ApplicationDbContext _context;
