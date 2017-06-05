@@ -6,7 +6,6 @@
 *.user
 *.userosscache
 *.sln.docstates
-*.suo
 *.dll
 appsettings.development.json
 
@@ -233,14 +232,3 @@ web.*.config
 *.d.ts
 *.js.map
 !**/customTypings/**/*.d.ts
-
-/src/NovaManus.Client/wwwroot/**/*.js
-!/src/NovaManus.Client/wwwroot/web.config
-/src/NovaManus.Client/app/**/*.js
-!/src/NovaManus.Client/app/system.config.js
-/src/NovaManus.Client/tests
-/src/NovaManus.Client/assets/styles/style-site.css
-
-/src/NovaManus.Client/tmp
-/src/NovaManus.Client/prod
-/src/NovaManus.Client/prod1
