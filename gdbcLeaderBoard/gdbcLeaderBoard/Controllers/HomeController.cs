@@ -25,7 +25,8 @@ namespace gdbcLeaderBoard.Controllers
             var teamScores = _context.Team.Select(tt =>
                 new TeamScoreViewModel { Venue = tt.Venue.Name, Team = tt.Name, Score = tt.Scores.Sum(s => s.Challenge.Points) }
             )
-            .OrderByDescending(o => o.Score)
+            .Where(t => t.Score > 0)
+            .OrderByDescending(o => o.Score).Take(5)
             .ToList();
             
 
@@ -38,7 +39,8 @@ namespace gdbcLeaderBoard.Controllers
             .Select(x =>
                 new VenueScoreViewModel { Venue = x.Key, Score = x.Sum(s => s.Score) }
             )
-            .OrderByDescending(o => o.Score)
+            .Where(t => t.Score > 0)
+            .OrderByDescending(o => o.Score).Take(5)
             .ToList();
 
             vm.VenueScores = venueScores;
@@ -57,6 +59,7 @@ namespace gdbcLeaderBoard.Controllers
             .Select(x =>
                 new VenueScoreViewModel { Venue = x.Key, Score = x.Sum(s => s.Score) }
             )
+            .Where(t => t.Score > 0)
             .OrderByDescending(o => o.Score)
             .ToList();
 
@@ -75,10 +78,10 @@ namespace gdbcLeaderBoard.Controllers
 
             if (id != null)
             {
-                teamScores = teamScores.Where(v => v.Venue.ToLower() == id.ToLower());
+                teamScores = teamScores.Where(v => v.Venue.ToLower() == id.ToLower() && v.Score > 0);
             }
 
-            vm.TeamScores = teamScores.OrderByDescending(o => o.Score).ToList();
+            vm.TeamScores = teamScores.Where(t => t.Score > 0).OrderByDescending(o => o.Score).ToList();
 
             vm.Venues = _context.Venue.ToList();
             return View(vm);
