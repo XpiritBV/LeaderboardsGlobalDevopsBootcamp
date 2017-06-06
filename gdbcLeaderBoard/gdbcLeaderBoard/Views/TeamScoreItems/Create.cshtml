@@ -3,35 +3,35 @@
 @{
     ViewData["Title"] = "Create";
 }
+<div class="whitebox">
+    <h2>Create</h2>
 
-<h2>Create</h2>
+    <form asp-action="Create">
+        <div class="form-horizontal">
+            <h4>TeamScoreItem</h4>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ChallengeID" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <select asp-for="ChallengeID" class="form-control" asp-items="ViewBag.ChallengeID"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="TeamID" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <select asp-for="TeamID" class="form-control" asp-items="ViewBag.TeamID"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </form>
 
-<form asp-action="Create">
-    <div class="form-horizontal">
-        <h4>TeamScoreItem</h4>
-        <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="ChallengeID" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="ChallengeID" class ="form-control" asp-items="ViewBag.ChallengeID"></select>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="TeamID" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="TeamID" class ="form-control" asp-items="ViewBag.TeamID"></select>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
+    <div>
+        <a asp-action="Index">Back to List</a>
     </div>
-</form>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
-

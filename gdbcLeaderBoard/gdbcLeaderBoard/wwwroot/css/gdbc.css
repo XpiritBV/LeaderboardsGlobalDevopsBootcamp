@@ -3,6 +3,11 @@
     font-family: "Electrolize",Helvetica,sans-serif;
 }
 
+.whitebox{
+    background-color: #ffffff;
+    padding: 50px;
+}
+
 .lbtitle {
     z-index: 100;
     left: 0px;

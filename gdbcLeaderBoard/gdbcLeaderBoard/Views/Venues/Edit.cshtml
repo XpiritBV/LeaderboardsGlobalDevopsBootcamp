@@ -3,41 +3,42 @@
 @{
     ViewData["Title"] = "Edit";
 }
+<div class="whitebox">
+    <h2>Edit</h2>
 
-<h2>Edit</h2>
+    <form asp-action="Edit">
+        <div class="form-horizontal">
+            <h4>Venue</h4>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="VenueAdminID" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <select asp-for="VenueAdminID" class="form-control" asp-items="ViewBag.ApplicationUsers"></select>
+                </div>
+            </div>
 
-<form asp-action="Edit">
-    <div class="form-horizontal">
-        <h4>Venue</h4>
-        <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="Id" />
-        <div class="form-group">
-            <label asp-for="Name" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            <label asp-for="VenueAdminID" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="VenueAdminID" class="form-control" asp-items="ViewBag.ApplicationUsers"></select>
-            </div>
-        </div>
+    </form>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
+    <div>
+        <a asp-action="Index">Back to List</a>
     </div>
-</form>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
