@@ -225,7 +225,6 @@ node_modules/
 !**/wwwroot/web.config
 
 web.*.config
-**/wwwroot/*
 
 **/*.xproj.user
 
