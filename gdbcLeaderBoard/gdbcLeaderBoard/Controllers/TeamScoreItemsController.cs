@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace gdbcLeaderBoard.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Xpirit,Venue")]
     public class TeamScoreItemsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -52,7 +52,13 @@ namespace gdbcLeaderBoard.Controllers
         public IActionResult Create()
         {
             ViewData["ChallengeID"] = new SelectList(_context.Challenge, "Id", "Name");
+            if (this.User.IsInRole("Xpirit")) { 
             ViewData["TeamID"] = new SelectList(_context.Team.Select(t => new { Id = t.Id, Name = t.Venue.Name + " : " + t.Name }).OrderBy(t=> t.Name), "Id", "Name");
+            }
+            else
+            {
+                ViewData["TeamID"] = new SelectList(_context.Team.Where(t=> t.Venue.VenueAdmin.UserName == this.User.Identity.Name).Select(t => new { Id = t.Id, Name = t.Venue.Name + " : " + t.Name }).OrderBy(t => t.Name), "Id", "Name");
+            }
             return View();
         }
 

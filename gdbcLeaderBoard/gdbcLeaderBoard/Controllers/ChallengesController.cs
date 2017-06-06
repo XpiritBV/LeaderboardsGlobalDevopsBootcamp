@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace gdbcLeaderBoard.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Xpirit")]
     public class ChallengesController : Controller
     {
         private readonly ApplicationDbContext _context;

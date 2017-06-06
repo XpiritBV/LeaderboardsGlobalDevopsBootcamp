@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace gdbcLeaderBoard.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Xpirit,Venue")]
     public class TeamsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -35,7 +35,7 @@ namespace gdbcLeaderBoard.Controllers
                 return NotFound();
             }
 
-            var team = await _context.Team
+            var team = await _context.Team.Where(t=> t.Venue.VenueAdmin.UserName == this.User.Identity.Name || this.User.IsInRole("Xpirit"))
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (team == null)
             {
@@ -69,9 +69,12 @@ namespace gdbcLeaderBoard.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(team);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                if (_context.Venue.Any(v =>( v.VenueAdmin.UserName == this.User.Identity.Name && v.Id == team.VenueID) || this.User.IsInRole("Xpirit")))
+                {
+                    _context.Add(team);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index");
+                }
             }
             return View(team);
         }
@@ -100,7 +103,7 @@ namespace gdbcLeaderBoard.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name", "VenueID")] Team team)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Team team)
         {
             if (id != team.Id)
             {
@@ -111,8 +114,11 @@ namespace gdbcLeaderBoard.Controllers
             {
                 try
                 {
-                    _context.Update(team);
-                    await _context.SaveChangesAsync();
+                    if (_context.Venue.Any(v => (v.VenueAdmin.UserName == this.User.Identity.Name && v.Id == team.VenueID) || this.User.IsInRole("Xpirit")))
+                    {
+                        _context.Update(team);
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -131,6 +137,7 @@ namespace gdbcLeaderBoard.Controllers
         }
 
         // GET: Teams/Delete/5
+        [Authorize("Xpirit")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -151,6 +158,7 @@ namespace gdbcLeaderBoard.Controllers
         // POST: Teams/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize("Xpirit")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var team = await _context.Team.SingleOrDefaultAsync(m => m.Id == id);
