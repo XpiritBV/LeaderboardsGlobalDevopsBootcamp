@@ -46,19 +46,44 @@ namespace gdbcLeaderBoard.Controllers
             return View(vm);
         }
 
-        public IActionResult About()
+        public IActionResult Venues()
         {
-            ViewData["Message"] = "Your application description page.";
+            ScoreOverviewViewModel vm = new ScoreOverviewViewModel();
 
-            return View();
+            var venueScores = _context.Team.Select(t =>
+                new VenueScoreViewModel { Venue = t.Venue.Name, Score = t.Scores.Sum(s => s.Challenge.Points) }
+            )
+            .GroupBy(x => x.Venue)
+            .Select(x =>
+                new VenueScoreViewModel { Venue = x.Key, Score = x.Sum(s => s.Score) }
+            )
+            .OrderByDescending(o => o.Score)
+            .ToList();
+
+            vm.VenueScores = venueScores;
+
+            return View(vm);
         }
 
-        public IActionResult Contact()
+        public IActionResult Teams(string id)
         {
-            ViewData["Message"] = "Your contact page.";
+            TeamOverviewViewModel vm = new TeamOverviewViewModel();
 
-            return View();
+            var teamScores = _context.Team.Select(tt =>
+                new TeamScoreViewModel { Venue = tt.Venue.Name, Team = tt.Name, Score = tt.Scores.Sum(s => s.Challenge.Points) }
+            );
+
+            if (id != null)
+            {
+                teamScores = teamScores.Where(v => v.Venue.ToLower() == id.ToLower());
+            }
+
+            vm.TeamScores = teamScores.OrderByDescending(o => o.Score).ToList();
+
+            vm.Venues = _context.Venue.ToList();
+            return View(vm);
         }
+
 
         public IActionResult Error()
         {

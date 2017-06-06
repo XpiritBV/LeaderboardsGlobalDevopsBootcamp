@@ -1,21 +1,14 @@
-﻿@model gdbcLeaderBoard.Models.HomeViewModels.ScoreOverviewViewModel
-
-<div class="row">
-    <h2 class="lbtitle">Venue scores</h2>
-    <ul class="lb">
-        @for (int i = 0; i < Model.VenueScores.Count; i++)
-        {
-            <li class="lbitem">
-                <div class="lbrank">@(i + 1)</div>
-                <div class="lbscore">@Model.VenueScores[i].Score</div>
-                <div class="lbteam">@Model.VenueScores[i].Venue </div>
-            </li>
-        }
-    </ul>
-</div>
+﻿@model gdbcLeaderBoard.Models.HomeViewModels.TeamOverviewViewModel
 
 <div class="row">
     <h2 class="lbtitle">Team scores</h2>
+    @using (Html.BeginForm("Teams", "Home", FormMethod.Get, new { id = "VenueForm" })){
+
+    @Html.DropDownListFor(m => m.Id, Model.VenueItems,"select your venue",new{
+          onchange = "document.getElementById('VenueForm').submit();"
+       })
+    }
+
     <ul class="lb">
         @for (int i = 0; i < Model.TeamScores.Count; i++)
         {

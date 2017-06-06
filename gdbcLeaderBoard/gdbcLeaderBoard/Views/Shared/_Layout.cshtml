@@ -1,4 +1,11 @@
 ﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+
+@using Microsoft.AspNetCore.Identity
+@using gdbcLeaderBoard.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,21 +44,27 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Scores<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="TeamScoreItems" asp-action="Create">Add Score</a></li>
-                            <li><a asp-area="" asp-controller="TeamScoreItems" asp-action="Index">Scores</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin teams/venues/chanllenges<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="Challenges" asp-action="">Challenges</a></li>
-                            <li><a asp-area="" asp-controller="Venues" asp-action="">Venues</a></li>
-                            <li><a asp-area="" asp-controller="Teams" asp-action="">Teams</a></li>
-                        </ul>
-                    </li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Venues">Venues</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Teams">Teams</a></li>
+                    
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Scores<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-area="" asp-controller="TeamScoreItems" asp-action="Create">Add Score</a></li>
+                                <li><a asp-area="" asp-controller="TeamScoreItems" asp-action="Index">Scores</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin teams/venues/chanllenges<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-area="" asp-controller="Challenges" asp-action="">Challenges</a></li>
+                                <li><a asp-area="" asp-controller="Venues" asp-action="">Venues</a></li>
+                                <li><a asp-area="" asp-controller="Teams" asp-action="">Teams</a></li>
+                            </ul>
+                        </li>
+                    }
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>
