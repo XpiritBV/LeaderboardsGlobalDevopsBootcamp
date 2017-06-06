@@ -56,8 +56,17 @@ namespace gdbcLeaderBoard.Controllers
 
         private IEnumerable<SelectListItem> GetVenues()
         {
-            var venues = _context.Venue.ToList();
-            return new SelectList(venues, "Id", "Name");
+            if (User.IsInRole("Venue"))
+            {
+                var venues = _context.Venue.Where(v => v.VenueAdmin.UserName == User.Identity.Name).ToList();
+                return new SelectList(venues, "Id", "Name");
+            }
+            else
+            {
+                var venues = _context.Venue.ToList();
+                return new SelectList(venues, "Id", "Name");
+            }
+           
         }
 
         // POST: Teams/Create
@@ -103,7 +112,7 @@ namespace gdbcLeaderBoard.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Team team)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,VenueID")] Team team)
         {
             if (id != team.Id)
             {
@@ -162,8 +171,11 @@ namespace gdbcLeaderBoard.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var team = await _context.Team.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Team.Remove(team);
-            await _context.SaveChangesAsync();
+            if (_context.Venue.Any(v => (v.VenueAdmin.UserName == this.User.Identity.Name && v.Id == team.VenueID) || this.User.IsInRole("Xpirit")))
+            {
+                _context.Team.Remove(team);
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction("Index");
         }
 

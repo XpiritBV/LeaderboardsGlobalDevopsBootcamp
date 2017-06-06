@@ -22,7 +22,8 @@ namespace gdbcLeaderBoard
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddUserSecrets<AuthMessageSenderOptions>();
 
             if (env.IsDevelopment())
             {
@@ -71,6 +72,8 @@ namespace gdbcLeaderBoard
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+
+            services.Configure<AuthMessageSenderOptions>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -20,6 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Data\Migrations\20170606174939_userAndVenues.cs_" />
+    <None Remove="Data\Migrations\20170606174939_userAndVenues.Designer.cs_" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="wwwroot\css\gdbc.css" />
   </ItemGroup>
   <ItemGroup>
