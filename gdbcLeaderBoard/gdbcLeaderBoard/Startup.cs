@@ -43,9 +43,28 @@ namespace gdbcLeaderBoard
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(config =>
+            {
+                       config.SignIn.RequireConfirmedEmail = true;
+                   })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddAuthorization(options =>
+            {
+
+                options.AddPolicy("Xpirit",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("Xpirit");
+                    });
+                options.AddPolicy("Venue",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("Venue");
+                    });
+
+            });
 
             services.AddMvc();
 
