@@ -1,4 +1,4 @@
-
+ss
 # Global devops bootcamp leaderboard
 ## Introduction
 
@@ -6,7 +6,7 @@ The Global devops bootcamp leaderboard will allow you to assign completed challa
 
 ## Login
 
-If you are a venue owner of the Global devops bootcamp you have received a login and password to adminstrator the team and points for your venue. Go to: [the Leaderboard site](https://gdbcleaderboard.azurewebsites.net/) and click on logon to start.
+If you are a venue owner of the Global devops bootcamp you have received a login and password to adminstrator the teams and completed challanges for your venue. Go to: [the Leaderboard site](https://gdbcleaderboard.azurewebsites.net/) and click on logon to start.
 
 ## Adminster teams
 
