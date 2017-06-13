@@ -1,4 +1,3 @@
-ss
 # Global devops bootcamp leaderboard
 ## Introduction
 
