@@ -8,9 +8,10 @@ using gdbcLeaderBoard.Data;
 namespace gdbcLeaderBoard.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180327181330_ChallengeCompleted_HelpUsed")]
+    partial class ChallengeCompleted_HelpUsed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")

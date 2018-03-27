@@ -21,19 +21,19 @@ namespace gdbcLeaderBoard.Controllers
         public IActionResult Index()
         {
             ScoreOverviewViewModel vm = new ScoreOverviewViewModel();
-           
+
             var teamScores = _context.Team.Select(tt =>
-                new TeamScoreViewModel { Venue = tt.Venue.Name, Team = tt.Name, Score = tt.Scores.Sum(s => s.Challenge.Points) }
+                new TeamScoreViewModel { Venue = tt.Venue.Name, Team = tt.Name, Score = tt.Scores.Sum(s => (int)(((double)s.Challenge.Points) * (s.HelpUsed ? 0.5 : 1d))) }
             )
             .Where(t => t.Score > 0)
             .OrderByDescending(o => o.Score).Take(5)
             .ToList();
-            
+
 
             vm.TeamScores = teamScores;
 
             var venueScores = _context.Team.Select(t =>
-                new VenueScoreViewModel { Venue = t.Venue.Name, Score = t.Scores.Sum(s => s.Challenge.Points) }
+                new VenueScoreViewModel { Venue = t.Venue.Name, Score = t.Scores.Sum(s => (int)(((double)s.Challenge.Points) * (s.HelpUsed ? 0.5 : 1d))) }
             )
             .GroupBy(x => x.Venue)
             .Select(x =>
@@ -53,7 +53,7 @@ namespace gdbcLeaderBoard.Controllers
             ScoreOverviewViewModel vm = new ScoreOverviewViewModel();
 
             var venueScores = _context.Team.Select(t =>
-                new VenueScoreViewModel { Venue = t.Venue.Name, Score = t.Scores.Sum(s => s.Challenge.Points) }
+                new VenueScoreViewModel { Venue = t.Venue.Name, Score = t.Scores.Sum(s => (int)(((double)s.Challenge.Points) * (s.HelpUsed ? 0.5 : 1d))) }
             )
             .GroupBy(x => x.Venue)
             .Select(x =>
@@ -73,7 +73,7 @@ namespace gdbcLeaderBoard.Controllers
             TeamOverviewViewModel vm = new TeamOverviewViewModel();
 
             var teamScores = _context.Team.Select(tt =>
-                new TeamScoreViewModel { Venue = tt.Venue.Name, Team = tt.Name, Score = tt.Scores.Sum(s => s.Challenge.Points) }
+                new TeamScoreViewModel { Venue = tt.Venue.Name, Team = tt.Name, Score = tt.Scores.Sum(s => (int)(((double)s.Challenge.Points) * (s.HelpUsed ? 0.5 : 1d))) }
             );
 
             if (id != null)
