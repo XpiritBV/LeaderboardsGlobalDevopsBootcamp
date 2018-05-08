@@ -25,7 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\css\gdbc.css" />
+    <None Include="wwwroot\css\gdbc.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="2.4.337" />
