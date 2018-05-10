@@ -73,7 +73,7 @@ namespace gdbcLeaderBoard.Controllers
             TeamOverviewViewModel vm = new TeamOverviewViewModel();
 
             var teamScores = _context.Team.Select(tt =>
-                new TeamScoreViewModel { Venue = tt.Venue.Name, Team = tt.Name, Score =Convert.ToInt32( tt.Scores.Where(s => s.Status == "Done").Sum(s => ((s.Challenge.Points) * (s.HelpUsed ? 0.5m : 1m)))) }
+                new TeamScoreViewModel { Venue = tt.Venue.Name, Team = tt.Name, DoneCount = tt.Scores.Count(x => x.Status.ToLowerInvariant() == "done"), InProgressCount = tt.Scores.Count(x => x.Status.ToLowerInvariant() == "in progress"), Score =Convert.ToInt32( tt.Scores.Where(s => s.Status == "Done").Sum(s => ((s.Challenge.Points) * (s.HelpUsed ? 0.5m : 1m)))) }
             );
 
             if (id != null)

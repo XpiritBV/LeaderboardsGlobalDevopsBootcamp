@@ -10,5 +10,7 @@ namespace gdbcLeaderBoard.Models.HomeViewModels
         public string Venue { get; set; }
         public string Team { get; set; }
         public int Score { get; set; }
+        public int InProgressCount { get; set; }
+        public int DoneCount { get; set; }
     }
 }
