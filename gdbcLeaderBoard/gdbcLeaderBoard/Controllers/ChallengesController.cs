@@ -27,7 +27,7 @@ namespace gdbcLeaderBoard.Controllers
         {
             _context = context;
 
-            _token = configuration.GetSection("AppSettings").GetChildren().Where(x => x.Key == "Token").Single().Value;
+            _token = configuration.GetConnectionString("DefaultConnection");
         }
 
 
