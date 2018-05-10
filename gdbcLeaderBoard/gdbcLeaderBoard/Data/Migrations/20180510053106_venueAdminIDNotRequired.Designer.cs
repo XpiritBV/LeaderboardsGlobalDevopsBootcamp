@@ -8,8 +8,8 @@ using gdbcLeaderBoard.Data;
 namespace gdbcLeaderBoard.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170606174939_userAndVenues")]
-    partial class userAndVenues
+    [Migration("20180510053106_venueAdminIDNotRequired")]
+    partial class venueAdminIDNotRequired
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -72,6 +72,8 @@ namespace gdbcLeaderBoard.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("HelpUrl");
+
                     b.Property<string>("Name")
                         .IsRequired();
 
@@ -106,6 +108,10 @@ namespace gdbcLeaderBoard.Data.Migrations
 
                     b.Property<int>("ChallengeID");
 
+                    b.Property<bool>("HelpUsed");
+
+                    b.Property<string>("Status");
+
                     b.Property<int>("TeamID");
 
                     b.HasKey("Id");
@@ -125,8 +131,7 @@ namespace gdbcLeaderBoard.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<string>("VenueAdminID")
-                        .IsRequired();
+                    b.Property<string>("VenueAdminID");
 
                     b.HasKey("Id");
 
@@ -267,8 +272,7 @@ namespace gdbcLeaderBoard.Data.Migrations
                 {
                     b.HasOne("gdbcLeaderBoard.Models.ApplicationUser", "VenueAdmin")
                         .WithMany()
-                        .HasForeignKey("VenueAdminID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("VenueAdminID");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>

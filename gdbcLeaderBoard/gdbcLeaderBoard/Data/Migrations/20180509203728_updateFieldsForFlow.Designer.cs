@@ -8,8 +8,8 @@ using gdbcLeaderBoard.Data;
 namespace gdbcLeaderBoard.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170605191439_AddXpiritRole")]
-    partial class AddXpiritRole
+    [Migration("20180509203728_updateFieldsForFlow")]
+    partial class updateFieldsForFlow
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -72,6 +72,8 @@ namespace gdbcLeaderBoard.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("HelpUrl");
+
                     b.Property<string>("Name")
                         .IsRequired();
 
@@ -105,6 +107,10 @@ namespace gdbcLeaderBoard.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("ChallengeID");
+
+                    b.Property<bool>("HelpUsed");
+
+                    b.Property<string>("Status");
 
                     b.Property<int>("TeamID");
 

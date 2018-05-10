@@ -32,6 +32,8 @@ namespace gdbcLeaderBoard
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
+
+            
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -39,6 +41,8 @@ namespace gdbcLeaderBoard
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IConfiguration>(this.Configuration);
+
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));

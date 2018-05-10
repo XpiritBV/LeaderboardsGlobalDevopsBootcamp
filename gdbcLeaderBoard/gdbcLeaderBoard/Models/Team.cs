@@ -15,9 +15,11 @@ namespace gdbcLeaderBoard.Models
         public string Name { get; set; }
         [Required]
         public int Points { get; set; }
+        public string HelpUrl { get; internal set; }
     }
 
-    public class TeamScoreItem {
+    public class TeamScoreItem
+    {
         public int Id { get; set; }
         [Required]
         public int ChallengeID { get; set; }
@@ -25,7 +27,8 @@ namespace gdbcLeaderBoard.Models
         [Required]
         public int TeamID { get; set; }
         public Team Team { get; set; }
-        public bool HelpUsed { get; internal set; }
+        public bool HelpUsed { get; set; }
+        public string Status { get; set; }
     }
 
 
@@ -39,16 +42,15 @@ namespace gdbcLeaderBoard.Models
         public Venue Venue { get; set; }
         public ICollection<TeamScoreItem> Scores { get; set; }
 
-     
+
     }
 
     public class Venue
     {
         public int Id { get; set; }
 
-        [Required]
         public string VenueAdminID { get; set; }
-        public ApplicationUser VenueAdmin { get;set; }
+        public ApplicationUser VenueAdmin { get; set; }
         [Required]
         public string Name { get; set; }
         public ICollection<Team> Teams { get; set; }
