@@ -8,7 +8,7 @@
             <li class="lbitem">
                 <div class="lbrank">@(i + 1)</div>
                 <div class="lbscore">@Model.VenueScores[i].Score</div>
-                <div class="lbteam">@Model.VenueScores[i].Venue </div>
+                <div class="lbteam"><a href="/Home/Teams?Id=@Model.VenueScores[i].Venue">@Model.VenueScores[i].Venue</a> </div>
             </li>
         }
     </ul>
