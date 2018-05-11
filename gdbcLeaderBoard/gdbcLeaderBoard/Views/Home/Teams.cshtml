@@ -15,7 +15,7 @@
         <li class="lbitem">
             <div class="lbrank">@(i + 1)</div>
             <div class="lbscore">@Model.TeamScores[i].Score  </div>
-            <div class="lbteam">@Model.TeamScores[i].Team   <span style="font-size:10px">(Done: @Model.TeamScores[i].DoneCount, In progress: @Model.TeamScores[i].InProgressCount)</span></div>
+            <div class="lbteam">@Model.TeamScores[i].Team   <span style="font-size:10px">(Done: @Model.TeamScores[i].DoneCount, Commited: @Model.TeamScores[i].CommitedCount,  Approved: @Model.TeamScores[i].ApprovedCount,)</span></div>
             <div class="lbvenue">@Model.TeamScores[i].Venue</div>
         </li>
         }
