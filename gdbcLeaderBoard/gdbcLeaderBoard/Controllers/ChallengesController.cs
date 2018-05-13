@@ -22,12 +22,14 @@ namespace gdbcLeaderBoard.Controllers
     {
         private readonly ApplicationDbContext _context;
         private string _token;
+        private string _url;
 
         public ChallengesController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
 
             _token = configuration.GetConnectionString("Token");
+            _url = configuration.GetConnectionString("VSTSUrl");
         }
 
 
@@ -37,7 +39,7 @@ namespace gdbcLeaderBoard.Controllers
         public async Task<IActionResult> Post([FromBody]WorkItemUpdate item)
         {
             int workitemid = item.resource.workItemId;
-            string url = $"https://osnabrugge.visualstudio.com/_apis/wit/workitems/{workitemid}?api-version=4.1";
+            string url = $"{_url}_apis/wit/workitems/{workitemid}?api-version=4.1";
             string response = await Get(url);
             response = response.Replace(".", "");
             WorkItem workitem = JsonConvert.DeserializeObject<WorkItem>(response);
@@ -171,7 +173,7 @@ namespace gdbcLeaderBoard.Controllers
             {
                 if (helpTagFound)
                 {
-                    await Patch($"https://osnabrugge.visualstudio.com/_apis/wit/workitems/{workitemid}?api-version=4.1",
+                    await Patch($"{_url}_apis/wit/workitems/{workitemid}?api-version=4.1",
                          @"
 [
   {
