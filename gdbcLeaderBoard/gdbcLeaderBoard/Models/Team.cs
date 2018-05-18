@@ -15,7 +15,8 @@ namespace gdbcLeaderBoard.Models
         public string Name { get; set; }
         [Required]
         public int Points { get; set; }
-        public string HelpUrl { get; internal set; }
+        public string HelpUrl { get; set; }
+        public bool IsBonus { get; set; }
     }
 
     public class TeamScoreItem

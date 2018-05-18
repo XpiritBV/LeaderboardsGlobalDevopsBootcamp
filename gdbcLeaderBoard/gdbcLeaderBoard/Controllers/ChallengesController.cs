@@ -169,6 +169,7 @@ namespace gdbcLeaderBoard.Controllers
             {
                 tsi.Status = status;
             }
+            if (!challange.IsBonus)
             if (!tsi.HelpUsed)
             {
                 if (helpTagFound)
