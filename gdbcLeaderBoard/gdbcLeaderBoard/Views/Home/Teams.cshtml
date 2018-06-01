@@ -4,11 +4,11 @@
     <h2 class="lbtitle">Team scores</h2>
     @using (Html.BeginForm("Teams", "Home", FormMethod.Get, new { id = "VenueForm" })){
 
-    @Html.DropDownListFor(m => m.Id, Model.VenueItems,"select your venue",new{
+    @Html.DropDownListFor(m => m.Id, Model.VenueItems,"Select your venue",new{
           onchange = "document.getElementById('VenueForm').submit();"
        })
     }
-
+    <br />
     <ul class="lb">
         @for (int i = 0; i < Model.TeamScores.Count; i++)
         {
