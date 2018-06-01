@@ -17,6 +17,7 @@ namespace gdbcLeaderBoard.Models
         public int Points { get; set; }
         public string HelpUrl { get; set; }
         public bool IsBonus { get; set; }
+        public string UniqueTag { get; set; }
     }
 
     public class TeamScoreItem
@@ -42,8 +43,6 @@ namespace gdbcLeaderBoard.Models
         public int VenueID { get; set; }
         public Venue Venue { get; set; }
         public ICollection<TeamScoreItem> Scores { get; set; }
-
-
     }
 
     public class Venue
@@ -55,6 +54,5 @@ namespace gdbcLeaderBoard.Models
         [Required]
         public string Name { get; set; }
         public ICollection<Team> Teams { get; set; }
-
     }
 }
