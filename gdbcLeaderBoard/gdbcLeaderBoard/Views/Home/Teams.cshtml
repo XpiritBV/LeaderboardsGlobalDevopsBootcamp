@@ -1,7 +1,13 @@
 ﻿@model gdbcLeaderBoard.Models.HomeViewModels.TeamOverviewViewModel
 
+@{ 
+    var selectedVenue = Model.Venues.FirstOrDefault(item => item.Name == Model.Name);
+    var title = $"Team scores{(selectedVenue == null ? "" : $" for '{selectedVenue?.Name}'")}";
+    ViewData["Title"] = title;
+}
+
 <div class="row">
-    <h2 class="lbtitle">Team scores</h2>
+    <h2 class="lbtitle">@title</h2>
     @using (Html.BeginForm("Teams", "Home", FormMethod.Get, new { id = "VenueForm" })){
 
     @Html.DropDownListFor(m => m.Id, Model.VenueItems,"Select your venue",new{
@@ -12,11 +18,19 @@
     <ul class="lb">
         @for (int i = 0; i < Model.TeamScores.Count; i++)
         {
+            var venue = selectedVenue == null ? $"({Model.TeamScores[i].Venue})" : "";
+
         <li class="lbitem">
             <div class="lbrank">@(i + 1)</div>
-            <div class="lbscore">@Model.TeamScores[i].Score  </div>
-            <div class="lbteam">@Model.TeamScores[i].Team   <span style="font-size:10px">(Done: @Model.TeamScores[i].DoneCount, Commited: @Model.TeamScores[i].CommitedCount,  Approved: @Model.TeamScores[i].ApprovedCount,)</span></div>
-            <div class="lbvenue">@Model.TeamScores[i].Venue</div>
+            <div class="lbscore">@Model.TeamScores[i].Score</div>
+            <div class="lbteam">
+                <div class="row">
+                    <div class="col-sm-6">@Model.TeamScores[i].Team <span class="lbvenue">@venue</span></div>
+                    <div class="col-sm-2">Done: @Model.TeamScores[i].DoneCount</div>
+                    <div class="col-sm-2">Commited: @Model.TeamScores[i].CommitedCount</div>
+                    <div class="col-sm-2">Approved: @Model.TeamScores[i].ApprovedCount</div>
+                </div>
+            </div>
         </li>
         }
     </ul>
