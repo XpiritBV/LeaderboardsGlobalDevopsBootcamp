@@ -15,16 +15,16 @@
 
     <title>@ViewData["Title"] - Global Devops Bootcamp Leaderboard</title>
 
-    <environment names="Development">
+    <environment names="Development90890">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="~/css/gdbc.css" />
     </environment>
-    <environment names="Staging,Production">
+    <environment names="Staging,Production,Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" media="none" onload="if(media!='all')media='all'" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" media="none" onload="if(media!='all')media='all'" />
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
@@ -39,7 +39,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">
-                    <img src="~/images/gdbc-logo.png" id="logo"/>
+                    <img src="~/images/gdbc-logo-small.png" id="logo"/>
                 </a>
             </div>
             <div class="navbar-collapse collapse">
