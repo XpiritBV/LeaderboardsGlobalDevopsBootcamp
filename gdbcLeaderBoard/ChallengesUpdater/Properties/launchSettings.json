@@ -2,7 +2,7 @@
   "profiles": {
     "ChallengesUpdater": {
       "commandName": "Project",
-      "commandLineArgs": " \"C:\\Users\\RobBos\\source\\repos\\xpirit\\GDBC-Provisioning\\gdbc-provisioning\\general\\output.csv\""
+      "commandLineArgs": " \"C:\\Users\\RobBos\\source\\repos\\xpirit\\GDBC-Provisioning\\gdbc-provisioning\\general\\output.csv\" \"C:\\Users\\RobBos\\source\\repos\\xpirit\\GDBC-MarkdownTemplate\\mdtemplate.console\\bin\\Debug\\netcoreapp2.0\\stories.json\""
     }
   }
 }

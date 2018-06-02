@@ -1,7 +1,9 @@
 ﻿using gdbcLeaderBoard.Data;
+using mdtemplate.Stories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Binder;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,13 +16,13 @@ namespace ChallengesUpdater
     {
         static void Main(string[] args)
         {
-            if (args.Length == 0)
+            if (args.Length != 2)
             {
-                Console.WriteLine("Please pass a file to read from as an argument to this exe.");
+                Console.WriteLine("Please pass two filenames to read from as an argument to this exe.");
             }
             else
             {
-                ReadChallengesFile(args[0]);
+                ReadChallengesFile(args[0], args[1]);
             }
 
             if (Debugger.IsAttached)
@@ -31,22 +33,30 @@ namespace ChallengesUpdater
             }
         }
 
-        private static void ReadChallengesFile(string fileName)
+        private static void ReadChallengesFile(string dropboxLinkFileName, string storiesFileName)
         {
-            if (!File.Exists(fileName))
+            if (!File.Exists(dropboxLinkFileName))
             {
-                Console.WriteLine($"Cannot find file '{fileName}'");
+                Console.WriteLine($"Cannot find dropbox links file '{dropboxLinkFileName}'");
                 return;
             }
 
-            Console.WriteLine($"Reading from file '{fileName}'");
-            var contents = File.ReadAllLines(fileName);
+            if (!File.Exists(storiesFileName))
+            {
+                Console.WriteLine($"Cannot find stories file '{storiesFileName}'");
+                return;
+            }
+
+            Console.WriteLine($"Reading from file '{dropboxLinkFileName}'");
+            var contents = File.ReadAllLines(dropboxLinkFileName);
 
             if (contents.Length <= 3)
             {
                 Console.WriteLine("File contents to short, stopping execution");
                 return;
             }
+
+            var stories = GetStories(storiesFileName);
 
             LoadContext();
 
@@ -56,16 +66,18 @@ namespace ChallengesUpdater
 
             for (int i = 2; i < contents.Length - 1; i++)
             {
+                // line should have 2 elements
                 var lineParts = contents[i].Split(",");
                 if (lineParts.Length != 2)
                 {
                     Console.WriteLine($"Error parsing line {i + 1}");
                 }
 
+                // remove the quotes
                 var sourceDirectory = lineParts[0].Replace("\"", "");
                 var dropBoxLink = lineParts[1].Replace("\"", "");
 
-                UpdateChallenge(sourceDirectory, dropBoxLink, challenges);                
+                UpdateChallenge(sourceDirectory, dropBoxLink, challenges, stories);                
             }
             _context.SaveChanges();
 
@@ -73,28 +85,68 @@ namespace ChallengesUpdater
             Console.WriteLine("Done with the updates");
         }
 
+        private static StoryCollection GetStories(string storiesFileName)
+        {
+            var contents = File.ReadAllText(storiesFileName);
+            return JsonConvert.DeserializeObject<StoryCollection>(contents);
+        }
+
         private static ApplicationDbContext _context;
 
-        private static void UpdateChallenge(string sourceDirectory, string dropBoxLink, List<gdbcLeaderBoard.Models.Challenge> challenges)
+        private static void UpdateChallenge(string sourceDirectory, string dropBoxLink, List<gdbcLeaderBoard.Models.Challenge> challenges, StoryCollection stories)
         {
-            Console.Write($"Updating challenge '{sourceDirectory}'");
+           var challangeName = sourceDirectory.Substring(0, 9);
 
-            var challangeName = sourceDirectory.Substring(0, 9);
-
-            var challange = challenges.FirstOrDefault(item => item.Name == challangeName);
-            if (challange == null)
+            var challenge = challenges.FirstOrDefault(item => item.Name == challangeName);
+            if (challenge == null)
             {
-                challange = new gdbcLeaderBoard.Models.Challenge { Name = challangeName };
-                _context.Challenge.Add(challange);
+                challenge = new gdbcLeaderBoard.Models.Challenge { Name = challangeName };
+                _context.Challenge.Add(challenge);
             }
 
-            challange.HelpUrl = UpdateLinkToForceDownload(dropBoxLink);
-            if (string.IsNullOrWhiteSpace(challange.UniqueTag))
+            // update properties
+            challenge.HelpUrl = UpdateLinkToForceDownload(dropBoxLink);
+
+            // get info from parsed stories:
+            var data = GetPointsForStory(stories, challangeName);
+            challenge.Points = data.Item1;
+            challenge.IsBonus = data.Item2;
+
+            if (string.IsNullOrWhiteSpace(challenge.UniqueTag))
             {
-                challange.UniqueTag = GetNewUniqueTag();
+                challenge.UniqueTag = GetNewUniqueTag();
             }
-            
+
+            Console.Write($"Updating challenge '{sourceDirectory}', points: {challenge.Points}, bonus: {challenge.IsBonus}");
+
             Console.WriteLine();
+        }
+
+        private static Tuple<int, bool> GetPointsForStory(StoryCollection stories, string challengeName)
+        {
+            var story = stories.FirstOrDefault(item => item.Id == challengeName);
+            var points = 0;
+            var isBonus = false;
+
+            if (story == null)
+            {
+                Console.WriteLine($"Cannot story for challange '{challengeName}'");
+                return new Tuple<int, bool>(points, isBonus);
+            }
+
+            var pointsProperty = story.Properties.FirstOrDefault(item => item.Key == "effort");
+            if (!string.IsNullOrEmpty(pointsProperty.Key))
+            {
+                int.TryParse(pointsProperty.Value, out points);
+            }
+
+            var isBonusProperty = story.Properties.FirstOrDefault(item => item.Key == "bonus");
+            if (!string.IsNullOrEmpty(pointsProperty.Key))
+            {
+                bool.TryParse(isBonusProperty.Value, out isBonus);
+            }
+
+            return new Tuple<int, bool>(points, isBonus);
         }
 
         private static string UpdateLinkToForceDownload(string dropBoxLink)
