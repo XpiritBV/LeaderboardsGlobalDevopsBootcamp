@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ChallengesUpdater": {
+      "commandName": "Project",
+      "commandLineArgs": " \"C:\\Users\\RobBos\\source\\repos\\xpirit\\GDBC-Provisioning\\gdbc-provisioning\\general\\output.csv\""
+    }
+  }
+}
