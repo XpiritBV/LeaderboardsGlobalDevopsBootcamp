@@ -14,6 +14,8 @@ namespace gdbcLeaderBoard.Models.HomeViewModels
         [Display(Name = "Venues")]
         public int Id { get; set; }
 
+        public string Name { get; set; }
+
         public IEnumerable<SelectListItem> VenueItems
         {
             get { return new SelectList(Venues, "Name", "Name"); }
