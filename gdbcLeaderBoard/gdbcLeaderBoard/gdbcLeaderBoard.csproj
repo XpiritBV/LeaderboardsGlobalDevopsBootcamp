@@ -13,18 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\EF.Models\**" />
-    <Content Remove="Data\EF.Models\**" />
-    <EmbeddedResource Remove="Data\EF.Models\**" />
-    <None Remove="Data\EF.Models\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Data\Migrations\20170606174939_userAndVenues.cs_" />
-    <None Remove="Data\Migrations\20170606174939_userAndVenues.Designer.cs_" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\css\gdbc.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -52,6 +40,9 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.1" />
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.1" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\gdbcLeaderBoard.Domain\gdbcLeaderBoard.Domain.csproj" />
   </ItemGroup>
 
 </Project>
