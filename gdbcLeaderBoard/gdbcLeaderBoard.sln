@@ -3,7 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gdbcLeaderBoard", "gdbcLeaderBoard\gdbcLeaderBoard.csproj", "{17EC34DD-A617-42E5-94D8-34A7A861C2D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gdbcLeaderBoard", "gdbcLeaderBoard\gdbcLeaderBoard.csproj", "{17EC34DD-A617-42E5-94D8-34A7A861C2D9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{108C67C7-CE53-4893-87F9-350D7F6AD701} = {108C67C7-CE53-4893-87F9-350D7F6AD701}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gdbcLeaderBoard.Domain", "gdbcLeaderBoard.Domain\gdbcLeaderBoard.Domain.csproj", "{108C67C7-CE53-4893-87F9-350D7F6AD701}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0EDDB222-D045-48B8-AE5E-FE9F242BD469}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChallengesUpdater", "ChallengesUpdater\ChallengesUpdater.csproj", "{0FC16D97-BCAC-48FD-8B38-9548107C3500}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +24,19 @@ Global
 		{17EC34DD-A617-42E5-94D8-34A7A861C2D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17EC34DD-A617-42E5-94D8-34A7A861C2D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17EC34DD-A617-42E5-94D8-34A7A861C2D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{108C67C7-CE53-4893-87F9-350D7F6AD701}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{108C67C7-CE53-4893-87F9-350D7F6AD701}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{108C67C7-CE53-4893-87F9-350D7F6AD701}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{108C67C7-CE53-4893-87F9-350D7F6AD701}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FC16D97-BCAC-48FD-8B38-9548107C3500}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FC16D97-BCAC-48FD-8B38-9548107C3500}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FC16D97-BCAC-48FD-8B38-9548107C3500}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FC16D97-BCAC-48FD-8B38-9548107C3500}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6E118377-AF30-4549-8967-A71298949BAA}
 	EndGlobalSection
 EndGlobal
