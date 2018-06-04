@@ -1,11 +1,12 @@
-# Global devops bootcamp leaderboard
+# Global DevOps Bootcamp Leaderboard
+
 ## Introduction
 
-The Global devops bootcamp leaderboard will allow you to assign completed challanges to teams on your venue. It will show the scores different leaderboards which you can select on the site.
+The Global devops bootcamp leaderboard will allow you to assign completed challenges to teams on your venue. It will show the scores and different leaderboards which you can select on the site.
 
 ## Login
 
-If you are a venue owner of the Global devops bootcamp you have received a login and password to adminster the teams and completed challenges and achievements for your venue. Go to: [the Leaderboard site](https://gdbcleaderboard.azurewebsites.net/) and click on logon to start.
+If you are a venue owner of the Global DevOps Bootcamp you have received a login and password to adminster the teams and completed challenges and achievements for your venue. Go to: [the Leaderboard site](https://gdbcleaderboard.azurewebsites.net/) and click on logon to start.
 
 ## Adminster teams
 
