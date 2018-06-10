@@ -50,12 +50,12 @@ namespace gdbcLeaderBoard.Controllers
             string[] teaminfo = workitem.fields.SystemTeamProject.Split('-');
             string venuename = teaminfo[1];
             string teamname = teaminfo.Count() == 3 ? teaminfo[2] : "DummyTeam";
-            string challenge = TagHelper.GetUniqueTag(workitem.fields.SystemTags);
+            string uniqueTag = TagHelper.GetUniqueTag(workitem.fields.SystemTags);
             _logger.LogInformation($"Received call from VSTS. Splitted in Team [{teamname}], Venue [{venuename}]");
 
             string status = workitem.fields.SystemState;
             bool helpTagFound = workitem.fields.SystemTags.Split(';').Select(h => h.Trim().ToLowerInvariant()).Contains("help");
-            return await UpdateChallenge(challenge, teamname, venuename, status, helpTagFound, workitemid);
+            return await UpdateChallenge(uniqueTag, teamname, venuename, status, helpTagFound, workitemid);
         }
 
         protected async Task<string> Get(string url)
@@ -131,12 +131,12 @@ namespace gdbcLeaderBoard.Controllers
             }
         }
 
-        private async Task<IActionResult> UpdateChallenge(string challengename, string teamname, string venuename, string status, bool helpTagFound, int workitemid)
+        private async Task<IActionResult> UpdateChallenge(string uniqueTag, string teamname, string venuename, string status, bool helpTagFound, int workitemid)
         {
-            var challenge = await _context.Challenge.SingleOrDefaultAsync(c => c.Name == challengename);
+            var challenge = await _context.Challenge.SingleOrDefaultAsync(c => c.UniqueTag == uniqueTag);
             if (challenge == null)
             {
-                return BadRequest("Unknown challange");
+                return BadRequest("Unknown challenge");
             }
 
             var team = await _context.Team.SingleOrDefaultAsync(c => c.Name == teamname && c.Venue.Name == venuename);
