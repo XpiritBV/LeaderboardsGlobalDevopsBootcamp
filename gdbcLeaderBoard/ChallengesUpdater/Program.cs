@@ -64,6 +64,7 @@ namespace ChallengesUpdater
             Console.WriteLine($"Found {challenges.Count} existing challenges. Will update the information if neccesary");
             Console.WriteLine();
 
+            var processedChallenges = new List<string>();
             for (int i = 2; i < contents.Length - 1; i++)
             {
                 // line should have 2 elements
@@ -77,12 +78,40 @@ namespace ChallengesUpdater
                 var sourceDirectory = lineParts[0].Replace("\"", "");
                 var dropBoxLink = lineParts[1].Replace("\"", "");
 
-                UpdateChallenge(sourceDirectory, dropBoxLink, challenges, stories);                
+                UpdateChallenge(sourceDirectory, dropBoxLink, challenges, stories);
+
+                processedChallenges.Add(ExtractChallengeName(sourceDirectory));
             }
+
+            AddMissingChallenges(stories, processedChallenges, _context);
+
             _context.SaveChanges();
 
             Console.WriteLine();
             Console.WriteLine("Done with the updates");
+        }
+
+        private static void AddMissingChallenges(StoryCollection stories, List<string> processedChallenges, ApplicationDbContext context)
+        {
+            foreach (var story in stories)
+            {
+                var challengeName = ExtractChallengeName(story.Filename);
+
+                if (processedChallenges.IndexOf(challengeName) == -1 && _context.Challenge.FirstOrDefault(item => item.Name == challengeName) == null)
+                {
+                    // add this missing challenge to the db
+
+                    var data = GetPointsForStory(stories, challengeName);
+
+                    _context.Challenge.Add(new gdbcLeaderBoard.Models.Challenge
+                    {
+                        Name = challengeName,
+                        Points = data.Item1,
+                        IsBonus = data.Item2,
+                        UniqueTag = data.Item3
+                    });                
+                }
+            }
         }
 
         private static StoryCollection GetStories(string storiesFileName)
@@ -93,9 +122,14 @@ namespace ChallengesUpdater
 
         private static ApplicationDbContext _context;
 
+        private static string ExtractChallengeName(string sourceDirectory)
+        {
+            return sourceDirectory.Substring(0, 9);
+        }
+
         private static void UpdateChallenge(string sourceDirectory, string dropBoxLink, List<gdbcLeaderBoard.Models.Challenge> challenges, StoryCollection stories)
         {
-           var challengeName = sourceDirectory.Substring(0, 9);
+            var challengeName = ExtractChallengeName(sourceDirectory);
 
             var challenge = challenges.FirstOrDefault(item => item.Name == challengeName);
             if (challenge == null)
