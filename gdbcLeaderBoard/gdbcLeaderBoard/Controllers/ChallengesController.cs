@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.IO;
 using System.Text;
+using gdbcLeaderBoard.Helpers;
 
 namespace gdbcLeaderBoard.Controllers
 {
@@ -46,12 +47,14 @@ namespace gdbcLeaderBoard.Controllers
             string[] teaminfo = workitem.fields.SystemTeamProject.Split('-');
             string venuename = teaminfo[1];
             string teamname = teaminfo.Count() == 3 ? teaminfo[2] : "DummyTeam";
-            string challenge = workitem.fields.SystemTags.Split(';')[0].Trim();
+            //string challenge = workitem.fields.SystemTags.Split(';')[0].Trim();
+            string challenge = TagHelper.GetUniqueTag(workitem.fields.SystemTags);
+
             string status = workitem.fields.SystemState;
             bool helpTagFound = workitem.fields.SystemTags.Split(';').Select(h => h.Trim().ToLowerInvariant()).Contains("help");
             return await UpdateChallenge(challenge, teamname, venuename, status, helpTagFound, workitemid);
         }
-
+        
         protected async Task<string> Get(string url)
         {
             try
