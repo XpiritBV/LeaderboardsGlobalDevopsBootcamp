@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.IO;
 using System.Text;
-using gdbcLeaderBoard.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace gdbcLeaderBoard.Controllers
 {
@@ -24,13 +24,15 @@ namespace gdbcLeaderBoard.Controllers
         private readonly ApplicationDbContext _context;
         private string _token;
         private string _url;
+        private ILogger _logger;
 
-        public ChallengesController(ApplicationDbContext context, IConfiguration configuration)
+        public ChallengesController(ApplicationDbContext context, IConfiguration configuration, ILoggerFactory loggerFactory)
         {
             _context = context;
 
             _token = configuration.GetConnectionString("Token");
             _url = configuration.GetConnectionString("VSTSUrl");
+            _logger = loggerFactory.CreateLogger<ChallengesController>();
         }
 
 
@@ -47,14 +49,14 @@ namespace gdbcLeaderBoard.Controllers
             string[] teaminfo = workitem.fields.SystemTeamProject.Split('-');
             string venuename = teaminfo[1];
             string teamname = teaminfo.Count() == 3 ? teaminfo[2] : "DummyTeam";
-            //string challenge = workitem.fields.SystemTags.Split(';')[0].Trim();
-            string challenge = TagHelper.GetUniqueTag(workitem.fields.SystemTags);
+            string challenge = workitem.fields.SystemTags.Split(';')[0].Trim();
+            _logger.LogInformation($"Received call from VSTS. Splitted in Team [{teamname}], Venue [{venuename}]");
 
             string status = workitem.fields.SystemState;
             bool helpTagFound = workitem.fields.SystemTags.Split(';').Select(h => h.Trim().ToLowerInvariant()).Contains("help");
             return await UpdateChallenge(challenge, teamname, venuename, status, helpTagFound, workitemid);
         }
-        
+
         protected async Task<string> Get(string url)
         {
             try
@@ -128,15 +130,15 @@ namespace gdbcLeaderBoard.Controllers
             }
         }
 
-        private async Task<IActionResult> UpdateChallenge(string challengename, string teamname, string venuename, string status, bool helpTagFound, int workitemid)
+        private async Task<IActionResult> UpdateChallenge(string challangename, string teamname, string venuename, string status, bool helpTagFound, int workitemid)
         {
-            var challange = await _context.Challenge.SingleOrDefaultAsync(c => c.Name == challengename);
+            var challange = await _context.Challenge.SingleOrDefaultAsync(c => c.Name == challangename);
             if (challange == null)
             {
-                return BadRequest("Unknown challenge");
+                return BadRequest("Unknown challange");
             }
 
-            var team = await _context.Team.SingleOrDefaultAsync(c => c.Name == teamname);
+            var team = await _context.Team.SingleOrDefaultAsync(c => c.Name == teamname && c.Venue.Name == venuename);
             if (team == null)
             {
                 var venue = await _context.Venue.SingleOrDefaultAsync(c => c.Name == venuename);
