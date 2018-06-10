@@ -97,7 +97,7 @@ namespace ChallengesUpdater
             {
                 var challengeName = ExtractChallengeName(story.Filename);
 
-                if (processedChallenges.IndexOf(challengeName) == -1 && _context.Challenge.FirstOrDefault(item => item.Name == challengeName) == null)
+                if (processedChallenges.IndexOf(challengeName) == -1 && _context.Challenge.FirstOrDefault(item => item.Name == challengeName) == null && story.StoryType != StoryType.Feature)
                 {
                     // add this missing challenge to the db
 
