@@ -57,7 +57,7 @@ namespace ChallengesUpdater
             }
 
             var stories = GetStories(storiesFileName);
-
+            Console.WriteLine($"Found {stories.Count} stories in '{storiesFileName}'");
             LoadContext();
 
             var challenges = _context.Challenge.ToListAsync().GetAwaiter().GetResult();
@@ -146,7 +146,7 @@ namespace ChallengesUpdater
             var uniqueTagProperty = story.Properties.FirstOrDefault(item => item.Key == "code");
             if (!string.IsNullOrEmpty(uniqueTagProperty.Key))
             {
-                uniqueTag = isBonusProperty.Value;
+                uniqueTag = uniqueTagProperty.Value;
             }
 
             return new Tuple<int, bool, string>(points, isBonus, uniqueTag);
@@ -157,15 +157,7 @@ namespace ChallengesUpdater
             //example: https://www.dropbox.com/s/randomstringhere/F001-P002-ManuallyCreateAzureResources-help.zip?dl=0
             return dropBoxLink.Replace("?dl=0", "?dl=1");
         }
-
-        private static Random random = new Random();
-        private static string GetNewUniqueTag()
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, 10)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
+        
         private static void LoadContext()
         {
             if (_context == null)
@@ -189,8 +181,11 @@ namespace ChallengesUpdater
 
         private static string GetConnectionString(string connectionStringName)
         {
+            var currentDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            Console.WriteLine($"Checking directory '{currentDirectory}' for appsettings");
+
             var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(currentDirectory)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile("appsettings.development.json", optional: true);
 
