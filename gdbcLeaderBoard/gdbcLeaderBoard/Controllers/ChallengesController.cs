@@ -14,6 +14,7 @@ using System.Net;
 using System.IO;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using gdbcLeaderBoard.Helpers;
 
 namespace gdbcLeaderBoard.Controllers
 {
@@ -49,7 +50,7 @@ namespace gdbcLeaderBoard.Controllers
             string[] teaminfo = workitem.fields.SystemTeamProject.Split('-');
             string venuename = teaminfo[1];
             string teamname = teaminfo.Count() == 3 ? teaminfo[2] : "DummyTeam";
-            string challenge = workitem.fields.SystemTags.Split(';')[0].Trim();
+            string challenge = TagHelper.GetUniqueTag(workitem.fields.SystemTags);
             _logger.LogInformation($"Received call from VSTS. Splitted in Team [{teamname}], Venue [{venuename}]");
 
             string status = workitem.fields.SystemState;
@@ -130,10 +131,10 @@ namespace gdbcLeaderBoard.Controllers
             }
         }
 
-        private async Task<IActionResult> UpdateChallenge(string challangename, string teamname, string venuename, string status, bool helpTagFound, int workitemid)
+        private async Task<IActionResult> UpdateChallenge(string challengename, string teamname, string venuename, string status, bool helpTagFound, int workitemid)
         {
-            var challange = await _context.Challenge.SingleOrDefaultAsync(c => c.Name == challangename);
-            if (challange == null)
+            var challenge = await _context.Challenge.SingleOrDefaultAsync(c => c.Name == challengename);
+            if (challenge == null)
             {
                 return BadRequest("Unknown challange");
             }
@@ -157,14 +158,14 @@ namespace gdbcLeaderBoard.Controllers
                 };
             }
 
-            var tsi = await _context.TeamScoreItem.SingleOrDefaultAsync(t => t.Challenge == challange && t.Team == team);
+            var tsi = await _context.TeamScoreItem.SingleOrDefaultAsync(t => t.Challenge == challenge && t.Team == team);
 
 
             if (tsi == null)
             {
                 tsi = new TeamScoreItem()
                 {
-                    Challenge = challange,
+                    Challenge = challenge,
                     Team = team,
                     Status = status,
                 };
@@ -174,25 +175,25 @@ namespace gdbcLeaderBoard.Controllers
             {
                 tsi.Status = status;
             }
-            if (!challange.IsBonus)
-            if (!tsi.HelpUsed)
-            {
-                if (helpTagFound)
+            if (!challenge.IsBonus)
+                if (!tsi.HelpUsed)
                 {
-                    await Patch($"{_url}_apis/wit/workitems/{workitemid}?api-version=4.1",
-                         @"
+                    if (helpTagFound)
+                    {
+                        await Patch($"{_url}_apis/wit/workitems/{workitemid}?api-version=4.1",
+                             @"
 [
   {
     ""op"": ""add"",
     ""path"": ""/fields/System.History"",
-    ""value"": ""You requested help for this achievement. You can find it here [" + challange.HelpUrl + @"]""
+    ""value"": ""You requested help for this achievement. You can find it here [" + challenge.HelpUrl + @"]""
   }
 ]
 ");
 
-                    tsi.HelpUsed = true;
+                        tsi.HelpUsed = true;
+                    }
                 }
-            }
             await _context.SaveChangesAsync();
             return Accepted(tsi);
         }
