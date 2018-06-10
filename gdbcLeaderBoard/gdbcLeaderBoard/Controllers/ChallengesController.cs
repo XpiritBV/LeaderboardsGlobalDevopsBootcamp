@@ -125,12 +125,12 @@ namespace gdbcLeaderBoard.Controllers
             }
         }
 
-        private async Task<IActionResult> UpdateChallenge(string challangename, string teamname, string venuename, string status, bool helpTagFound, int workitemid)
+        private async Task<IActionResult> UpdateChallenge(string challengename, string teamname, string venuename, string status, bool helpTagFound, int workitemid)
         {
-            var challange = await _context.Challenge.SingleOrDefaultAsync(c => c.Name == challangename);
+            var challange = await _context.Challenge.SingleOrDefaultAsync(c => c.Name == challengename);
             if (challange == null)
             {
-                return BadRequest("Unknown challange");
+                return BadRequest("Unknown challenge");
             }
 
             var team = await _context.Team.SingleOrDefaultAsync(c => c.Name == teamname);
