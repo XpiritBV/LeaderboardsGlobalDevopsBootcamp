@@ -49,7 +49,7 @@ namespace gdbcLeaderBoard.Controllers
             WorkItem workitem = JsonConvert.DeserializeObject<WorkItem>(response);
             string[] teaminfo = workitem.fields.SystemTeamProject.Split('-');
             string venuename = teaminfo[1];
-            string teamname = teaminfo.Count() == 3 ? teaminfo[2] : "DummyTeam";
+            string teamname = teaminfo.Count() >= 3 ? teaminfo[2] : "DummyTeam";
             string uniqueTag = TagHelper.GetUniqueTag(workitem.fields.SystemTags);
             _logger.LogInformation($"Received call from VSTS. Splitted in Team [{teamname}], Venue [{venuename}]");
 
