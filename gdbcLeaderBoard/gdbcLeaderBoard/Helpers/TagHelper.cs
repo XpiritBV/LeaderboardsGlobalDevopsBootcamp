@@ -17,9 +17,9 @@ namespace gdbcLeaderBoard.Helpers
             {
                 if (IgnoreTags.IndexOf(tag.ToLowerInvariant()) == -1)
                 {
-                    if (tag.Length == 8 && tag.IndexOf('-') == -1)
+                    if (tag.Trim().Length == 8 && tag.IndexOf('-') == -1)
                     {
-                        return tag;
+                        return tag.Trim();
                     }
                 }
             }
