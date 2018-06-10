@@ -95,12 +95,12 @@ namespace ChallengesUpdater
 
         private static void UpdateChallenge(string sourceDirectory, string dropBoxLink, List<gdbcLeaderBoard.Models.Challenge> challenges, StoryCollection stories)
         {
-           var challangeName = sourceDirectory.Substring(0, 9);
+           var challengeName = sourceDirectory.Substring(0, 9);
 
-            var challenge = challenges.FirstOrDefault(item => item.Name == challangeName);
+            var challenge = challenges.FirstOrDefault(item => item.Name == challengeName);
             if (challenge == null)
             {
-                challenge = new gdbcLeaderBoard.Models.Challenge { Name = challangeName };
+                challenge = new gdbcLeaderBoard.Models.Challenge { Name = challengeName };
                 _context.Challenge.Add(challenge);
             }
 
@@ -108,7 +108,7 @@ namespace ChallengesUpdater
             challenge.HelpUrl = UpdateLinkToForceDownload(dropBoxLink);
 
             // get info from parsed stories:
-            var data = GetPointsForStory(stories, challangeName);
+            var data = GetPointsForStory(stories, challengeName);
             challenge.Points = data.Item1;
             challenge.IsBonus = data.Item2;
 
