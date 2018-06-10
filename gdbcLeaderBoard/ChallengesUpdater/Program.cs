@@ -111,27 +111,24 @@ namespace ChallengesUpdater
             var data = GetPointsForStory(stories, challengeName);
             challenge.Points = data.Item1;
             challenge.IsBonus = data.Item2;
-
-            if (string.IsNullOrWhiteSpace(challenge.UniqueTag))
-            {
-                challenge.UniqueTag = GetNewUniqueTag();
-            }
+            challenge.UniqueTag = data.Item3;
 
             Console.Write($"Updating challenge '{sourceDirectory}', points: {challenge.Points}, bonus: {challenge.IsBonus}");
 
             Console.WriteLine();
         }
 
-        private static Tuple<int, bool> GetPointsForStory(StoryCollection stories, string challengeName)
+        private static Tuple<int, bool, string> GetPointsForStory(StoryCollection stories, string challengeName)
         {
             var story = stories.FirstOrDefault(item => item.Id == challengeName);
             var points = 0;
             var isBonus = false;
+            var uniqueTag = "";
 
             if (story == null)
             {
-                Console.WriteLine($"Cannot story for challange '{challengeName}'");
-                return new Tuple<int, bool>(points, isBonus);
+                Console.WriteLine($"Cannot process story for challenge '{challengeName}'");
+                return new Tuple<int, bool, string>(points, isBonus, uniqueTag);
             }
 
             var pointsProperty = story.Properties.FirstOrDefault(item => item.Key == "effort");
@@ -146,7 +143,13 @@ namespace ChallengesUpdater
                 bool.TryParse(isBonusProperty.Value, out isBonus);
             }
 
-            return new Tuple<int, bool>(points, isBonus);
+            var uniqueTagProperty = story.Properties.FirstOrDefault(item => item.Key == "code");
+            if (!string.IsNullOrEmpty(uniqueTagProperty.Key))
+            {
+                uniqueTag = isBonusProperty.Value;
+            }
+
+            return new Tuple<int, bool, string>(points, isBonus, uniqueTag);
         }
 
         private static string UpdateLinkToForceDownload(string dropBoxLink)
