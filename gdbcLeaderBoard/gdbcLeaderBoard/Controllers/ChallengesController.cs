@@ -36,8 +36,6 @@ namespace gdbcLeaderBoard.Controllers
             _logger = loggerFactory.CreateLogger<ChallengesController>();
         }
 
-
-
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Post([FromBody]WorkItemUpdate item)
@@ -197,7 +195,5 @@ namespace gdbcLeaderBoard.Controllers
             await _context.SaveChangesAsync();
             return Accepted(tsi);
         }
-
-
     }
 }
