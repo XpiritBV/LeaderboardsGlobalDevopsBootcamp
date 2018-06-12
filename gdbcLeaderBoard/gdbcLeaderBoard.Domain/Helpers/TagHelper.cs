@@ -15,9 +15,10 @@ namespace gdbcLeaderBoard.Helpers
 
             foreach (var tag in splitted)
             {
-                if (IgnoreTags.IndexOf(tag.ToLowerInvariant()) == -1)
+                var trimmedTag = tag.Trim().ToLowerInvariant();
+                if (IgnoreTags.IndexOf(trimmedTag) == -1)
                 {
-                    if (tag.Trim().Length == 8 && tag.IndexOf('-') == -1)
+                    if (trimmedTag.Length == 8 && trimmedTag.IndexOf('-') == -1)
                     {
                         return tag.Trim();
                     }
