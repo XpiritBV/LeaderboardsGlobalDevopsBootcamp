@@ -170,26 +170,53 @@ namespace gdbcLeaderBoard.Controllers
                 tsi.Status = status;
             }
             if (!challenge.IsBonus)
+            {
                 if (!tsi.HelpUsed)
                 {
                     if (helpTagFound)
                     {
-                        await Patch($"{vstsUrl}_apis/wit/workitems/{workitemid}?api-version=4.1",
-                             @"
-[
-  {
-    ""op"": ""add"",
-    ""path"": ""/fields/System.History"",
-    ""value"": ""You requested help for this achievement. You can find it here [" + challenge.HelpUrl + @"]""
-  }
-]
-");
+                        await PatchWithHelpComment(vstsUrl, workitemid, challenge);
 
                         tsi.HelpUsed = true;
                     }
                 }
+            }
+            else
+            {
+                if (helpTagFound)
+                {
+                    await PatchWithHelpNotAvailableComment(vstsUrl, workitemid);
+                }
+            }
             await _context.SaveChangesAsync();
             return Accepted(tsi);
+        }
+
+        private async Task PatchWithHelpComment(string vstsUrl, int workitemid, Challenge challenge)
+        {
+            await Patch($"{vstsUrl}_apis/wit/workitems/{workitemid}?api-version=4.1",
+                                                     @"
+[
+  {
+    ""op"": ""add"",
+    ""path"": ""/fields/System.History"",
+    ""value"": ""You requested help for this achievement. You can find it here: " + challenge.HelpUrl + @"""
+  }
+]
+");
+        }
+        private async Task PatchWithHelpNotAvailableComment(string vstsUrl, int workitemid)
+        {
+            await Patch($"{vstsUrl}_apis/wit/workitems/{workitemid}?api-version=4.1",
+                                                     @"
+[
+  {
+    ""op"": ""add"",
+    ""path"": ""/fields/System.History"",
+    ""value"": ""You requested help for this achievement, but because it is a BONUS challenge, there is no help available.""
+  }
+]
+");
         }
     }
 }
