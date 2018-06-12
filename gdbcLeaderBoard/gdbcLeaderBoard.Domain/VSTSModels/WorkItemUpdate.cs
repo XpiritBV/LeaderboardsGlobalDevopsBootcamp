@@ -65,7 +65,6 @@ namespace gdbcLeaderBoard.Domain.VSTSModels
         public SystemWatermark SystemWatermark { get; set; }
         public SystemBoardcolumn SystemBoardColumn { get; set; }
         public MicrosoftVSTSCommonCloseddate MicrosoftVSTSCommonClosedDate { get; set; }
-        public WEF_D5DFF9FE983E41F69DF3689CA96DF806_KanbanColumn WEF_D5DFF9FE983E41F69DF3689CA96DF806_KanbanColumn { get; set; }
     }
 
     public class SystemRev
@@ -120,13 +119,7 @@ namespace gdbcLeaderBoard.Domain.VSTSModels
     {
         public DateTime oldValue { get; set; }
     }
-
-    public class WEF_D5DFF9FE983E41F69DF3689CA96DF806_KanbanColumn
-    {
-        public string oldValue { get; set; }
-        public string newValue { get; set; }
-    }
-
+    
     public class _Links1
     {
         public Self self { get; set; }
@@ -182,8 +175,6 @@ namespace gdbcLeaderBoard.Domain.VSTSModels
         public int MicrosoftVSTSCommonPriority { get; set; }
         public string MicrosoftVSTSCommonValueArea { get; set; }
         public float MicrosoftVSTSSchedulingEffort { get; set; }
-        public string WEF_D5DFF9FE983E41F69DF3689CA96DF806_KanbanColumn { get; set; }
-        public bool WEF_D5DFF9FE983E41F69DF3689CA96DF806_KanbanColumnDone { get; set; }
         public string SystemDescription { get; set; }
         public string MicrosoftVSTSCommonAcceptanceCriteria { get; set; }
         public string SystemTags { get; set; }
@@ -249,5 +240,4 @@ namespace gdbcLeaderBoard.Domain.VSTSModels
         public string id { get; set; }
         public string baseUrl { get; set; }
     }
-
 }
