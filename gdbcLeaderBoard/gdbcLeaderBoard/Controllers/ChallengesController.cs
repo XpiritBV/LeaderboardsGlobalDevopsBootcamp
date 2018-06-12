@@ -43,10 +43,8 @@ namespace gdbcLeaderBoard.Controllers
             var vstsUrl = item.resourceContainers.collection.baseUrl;
 
             int workitemid = item.resource.workItemId;
-            string url = $"{vstsUrl}_apis/wit/workitems/{workitemid}?api-version=4.1";
-            string response = await Get(url);
-            response = response.Replace(".", "");
-            WorkItem workitem = JsonConvert.DeserializeObject<WorkItem>(response);
+            WorkItem workitem = await GetWorkItemInformation(vstsUrl, workitemid);
+
             string[] teaminfo = workitem.fields.SystemTeamProject.Split('-');
             string venuename = teaminfo[1];
             string teamname = teaminfo.Count() >= 3 ? teaminfo[2] : "DummyTeam";
@@ -56,6 +54,23 @@ namespace gdbcLeaderBoard.Controllers
             string status = workitem.fields.SystemState;
             bool helpTagFound = workitem.fields.SystemTags.Split(';').Select(h => h.Trim().ToLowerInvariant()).Contains("help");
             return await UpdateChallenge(vstsUrl, uniqueTag, teamname, venuename, status, helpTagFound, workitemid);
+        }
+
+        private async Task<WorkItem> GetWorkItemInformation(string vstsUrl, int workitemid)
+        {
+            string url = $"{vstsUrl}_apis/wit/workitems/{workitemid}?api-version=4.1";
+            string response = await Get(url);
+            response = response.Replace(".", "");
+            try
+            {
+                WorkItem workitem = JsonConvert.DeserializeObject<WorkItem>(response);
+                return workitem;
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation($"Error converting workitem information: {e.Message}");
+                throw;
+            }
         }
 
         protected async Task<string> Get(string url)

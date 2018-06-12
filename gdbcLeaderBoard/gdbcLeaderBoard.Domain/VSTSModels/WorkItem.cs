@@ -6,6 +6,13 @@ namespace gdbcLeaderBoard.Domain.VSTSModels
 {
     public class WorkItem
     {
-        public Fields1 fields { get; set; }
+        public Fields fields { get; set; }
+
+        public class Fields
+        {
+            public string SystemTeamProject { get; set; }
+            public string SystemTags { get; set; }
+            public string SystemState { get; set; }
+        }
     }
 }
