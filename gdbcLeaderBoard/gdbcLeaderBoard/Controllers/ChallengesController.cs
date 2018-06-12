@@ -15,6 +15,7 @@ using System.IO;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using gdbcLeaderBoard.Helpers;
+using gdbcLeaderBoard.Domain.VSTSModels;
 
 namespace gdbcLeaderBoard.Controllers
 {
@@ -24,7 +25,6 @@ namespace gdbcLeaderBoard.Controllers
     {
         private readonly ApplicationDbContext _context;
         private string _token;
-        private string _url;
         private ILogger _logger;
 
         public ChallengesController(ApplicationDbContext context, IConfiguration configuration, ILoggerFactory loggerFactory)
@@ -32,7 +32,7 @@ namespace gdbcLeaderBoard.Controllers
             _context = context;
 
             _token = configuration.GetConnectionString("Token");
-            _url = configuration.GetConnectionString("VSTSUrl");
+            //_url = configuration.GetConnectionString("VSTSUrl");
             _logger = loggerFactory.CreateLogger<ChallengesController>();
         }
 
@@ -40,8 +40,10 @@ namespace gdbcLeaderBoard.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Post([FromBody]WorkItemUpdate item)
         {
+            var vstsUrl = item.resourceContainers.collection.baseUrl;
+
             int workitemid = item.resource.workItemId;
-            string url = $"{_url}_apis/wit/workitems/{workitemid}?api-version=4.1";
+            string url = $"{vstsUrl}_apis/wit/workitems/{workitemid}?api-version=4.1";
             string response = await Get(url);
             response = response.Replace(".", "");
             WorkItem workitem = JsonConvert.DeserializeObject<WorkItem>(response);
@@ -53,7 +55,7 @@ namespace gdbcLeaderBoard.Controllers
 
             string status = workitem.fields.SystemState;
             bool helpTagFound = workitem.fields.SystemTags.Split(';').Select(h => h.Trim().ToLowerInvariant()).Contains("help");
-            return await UpdateChallenge(uniqueTag, teamname, venuename, status, helpTagFound, workitemid);
+            return await UpdateChallenge(vstsUrl, uniqueTag, teamname, venuename, status, helpTagFound, workitemid);
         }
 
         protected async Task<string> Get(string url)
@@ -107,29 +109,8 @@ namespace gdbcLeaderBoard.Controllers
                 return $"Exception: {ex}";
             }
         }
-
-        private class WorkItem
-        {
-            public Fields fields { get; set; }
-
-            public class Fields
-            {
-                public string SystemTeamProject { get; set; }
-                public string SystemTags { get; set; }
-                public string SystemState { get; set; }
-            }
-        }
-        public class WorkItemUpdate
-        {
-            public Resource resource { get; set; }
-
-            public class Resource
-            {
-                public int workItemId { get; set; }
-            }
-        }
-
-        private async Task<IActionResult> UpdateChallenge(string uniqueTag, string teamname, string venuename, string status, bool helpTagFound, int workitemid)
+        
+        private async Task<IActionResult> UpdateChallenge(string vstsUrl, string uniqueTag, string teamname, string venuename, string status, bool helpTagFound, int workitemid)
         {
             var challenge = await _context.Challenge.SingleOrDefaultAsync(c => c.UniqueTag == uniqueTag);
             if (challenge == null)
@@ -178,7 +159,7 @@ namespace gdbcLeaderBoard.Controllers
                 {
                     if (helpTagFound)
                     {
-                        await Patch($"{_url}_apis/wit/workitems/{workitemid}?api-version=4.1",
+                        await Patch($"{vstsUrl}_apis/wit/workitems/{workitemid}?api-version=4.1",
                              @"
 [
   {
