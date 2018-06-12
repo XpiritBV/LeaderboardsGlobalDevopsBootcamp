@@ -62,7 +62,6 @@ namespace gdbcLeaderBoard.UnitTests
             Assert.IsTrue(uniqueTag == DefaultUniqueTag);
         }
 
-
         [TestMethod]
         public void RequiredSecondTagHelperTest()
         {
