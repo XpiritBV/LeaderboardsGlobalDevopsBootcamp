@@ -9,5 +9,7 @@ namespace gdbcLeaderBoard.Models.HomeViewModels
     {
         public string Venue { get; set; }
         public int Score { get; set; }
+        public int nrTeams { get; set; }
+        public int avgScore { get; set; }
     }
 }
