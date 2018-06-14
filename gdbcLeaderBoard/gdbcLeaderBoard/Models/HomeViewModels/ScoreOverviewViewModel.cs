@@ -9,5 +9,8 @@ namespace gdbcLeaderBoard.Models.HomeViewModels
     {
         public List<VenueScoreViewModel> VenueScores { get; set; }
         public List<TeamScoreViewModel> TeamScores { get; set; }
+
+        public string Title { get; set; }
+        public bool SortOnAverage { get; set; }
     }
 }

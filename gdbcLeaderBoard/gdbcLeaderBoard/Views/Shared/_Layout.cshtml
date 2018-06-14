@@ -44,9 +44,12 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Top 50 Venues</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-route-sortOnAverage="true">Top 50 Venues (Average per Team)</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="IndexTeams">Top 50 Teams</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Venues">Venues</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Teams">Teams</a></li>
-                    
+
                     @if (SignInManager.IsSignedIn(User))
                     {
                         <li class="dropdown">

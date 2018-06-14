@@ -1,0 +1,23 @@
+﻿@model gdbcLeaderBoard.Models.HomeViewModels.ScoreOverviewViewModel
+@{ 
+    ViewData["Title"] = "Home";
+}
+
+<div class="row">
+    <h2 class="lbtitle">@Model.Title</h2>
+
+    <ul class="lb">
+        @for (int i = 0; i < Model.TeamScores.Count; i++)
+        {
+        <li class="lbitem">
+            <div class="lbrank">@(i+1)</div>
+            <div class="lbscore">@Model.TeamScores[i].Score</div>
+            <div class="lbteam">@Model.TeamScores[i].Team </div>
+            <div class="lbvenue"><a href="/Home/Teams?Id=@Model.TeamScores[i].Venue">@Model.TeamScores[i].Venue</a></div>
+        </li>
+        }
+    </ul>
+</div>
+<script>
+    setTimeout("location.reload(true);", 60000);
+</script>
