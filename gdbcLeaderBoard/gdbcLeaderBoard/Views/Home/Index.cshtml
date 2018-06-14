@@ -12,6 +12,8 @@
                 <div class="lbrank">@(i + 1)</div>
                 <div class="lbscore">@Model.VenueScores[i].Score</div>
                 <div class="lbteam"><a href="/Home/Teams?Id=@Model.VenueScores[i].Venue">@Model.VenueScores[i].Venue</a></div>
+                <div class="lbteam" align="right">(Avg. @Model.VenueScores[i].nrTeams teams)</div>
+                <div class="lbscore">@Model.VenueScores[i].avgScore</div>
             </li>
         }
     </ul>

@@ -37,7 +37,7 @@ namespace gdbcLeaderBoard.Controllers
             )
             .GroupBy(x => x.Venue)
             .Select(x =>
-                new VenueScoreViewModel { Venue = x.Key, Score = x.Sum(s => s.Score) }
+                new VenueScoreViewModel { Venue = x.Key, Score = x.Sum(s => s.Score), nrTeams=x.Count(), avgScore=(x.Sum(s => s.Score)/x.Count()) }
             )
             .Where(t => t.Score > 0)
             .OrderByDescending(o => o.Score).Take(5)
