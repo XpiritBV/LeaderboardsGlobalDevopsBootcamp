@@ -15,6 +15,7 @@ using System.IO;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using gdbcLeaderBoard.Helpers;
+using gdbcLeaderBoard.Domain.VSTSModels;
 
 namespace gdbcLeaderBoard.Controllers
 {
@@ -24,7 +25,6 @@ namespace gdbcLeaderBoard.Controllers
     {
         private readonly ApplicationDbContext _context;
         private string _token;
-        private string _url;
         private ILogger _logger;
 
         public ChallengesController(ApplicationDbContext context, IConfiguration configuration, ILoggerFactory loggerFactory)
@@ -32,30 +32,45 @@ namespace gdbcLeaderBoard.Controllers
             _context = context;
 
             _token = configuration.GetConnectionString("Token");
-            _url = configuration.GetConnectionString("VSTSUrl");
+            //_url = configuration.GetConnectionString("VSTSUrl");
             _logger = loggerFactory.CreateLogger<ChallengesController>();
         }
-
-
 
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Post([FromBody]WorkItemUpdate item)
         {
+            var vstsUrl = item.resourceContainers.collection.baseUrl;
+
             int workitemid = item.resource.workItemId;
-            string url = $"{_url}_apis/wit/workitems/{workitemid}?api-version=4.1";
-            string response = await Get(url);
-            response = response.Replace(".", "");
-            WorkItem workitem = JsonConvert.DeserializeObject<WorkItem>(response);
+            WorkItem workitem = await GetWorkItemInformation(vstsUrl, workitemid);
+
             string[] teaminfo = workitem.fields.SystemTeamProject.Split('-');
             string venuename = teaminfo[1];
-            string teamname = teaminfo.Count() == 3 ? teaminfo[2] : "DummyTeam";
+            string teamname = teaminfo.Count() >= 3 ? teaminfo[2] : "DummyTeam";
             string uniqueTag = TagHelper.GetUniqueTag(workitem.fields.SystemTags);
             _logger.LogInformation($"Received call from VSTS. Splitted in Team [{teamname}], Venue [{venuename}]");
 
             string status = workitem.fields.SystemState;
             bool helpTagFound = workitem.fields.SystemTags.Split(';').Select(h => h.Trim().ToLowerInvariant()).Contains("help");
-            return await UpdateChallenge(uniqueTag, teamname, venuename, status, helpTagFound, workitemid);
+            return await UpdateChallenge(vstsUrl, uniqueTag, teamname, venuename, status, helpTagFound, workitemid);
+        }
+
+        private async Task<WorkItem> GetWorkItemInformation(string vstsUrl, int workitemid)
+        {
+            string url = $"{vstsUrl}_apis/wit/workitems/{workitemid}?api-version=4.1";
+            string response = await Get(url);
+            response = response.Replace(".", "");
+            try
+            {
+                WorkItem workitem = JsonConvert.DeserializeObject<WorkItem>(response);
+                return workitem;
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation($"Error converting workitem information: {e.Message}");
+                throw;
+            }
         }
 
         protected async Task<string> Get(string url)
@@ -109,29 +124,8 @@ namespace gdbcLeaderBoard.Controllers
                 return $"Exception: {ex}";
             }
         }
-
-        private class WorkItem
-        {
-            public Fields fields { get; set; }
-
-            public class Fields
-            {
-                public string SystemTeamProject { get; set; }
-                public string SystemTags { get; set; }
-                public string SystemState { get; set; }
-            }
-        }
-        public class WorkItemUpdate
-        {
-            public Resource resource { get; set; }
-
-            public class Resource
-            {
-                public int workItemId { get; set; }
-            }
-        }
-
-        private async Task<IActionResult> UpdateChallenge(string uniqueTag, string teamname, string venuename, string status, bool helpTagFound, int workitemid)
+        
+        private async Task<IActionResult> UpdateChallenge(string vstsUrl, string uniqueTag, string teamname, string venuename, string status, bool helpTagFound, int workitemid)
         {
             var challenge = await _context.Challenge.SingleOrDefaultAsync(c => c.UniqueTag == uniqueTag);
             if (challenge == null)
@@ -176,28 +170,53 @@ namespace gdbcLeaderBoard.Controllers
                 tsi.Status = status;
             }
             if (!challenge.IsBonus)
+            {
                 if (!tsi.HelpUsed)
                 {
                     if (helpTagFound)
                     {
-                        await Patch($"{_url}_apis/wit/workitems/{workitemid}?api-version=4.1",
-                             @"
-[
-  {
-    ""op"": ""add"",
-    ""path"": ""/fields/System.History"",
-    ""value"": ""You requested help for this achievement. You can find it here [" + challenge.HelpUrl + @"]""
-  }
-]
-");
+                        await PatchWithHelpComment(vstsUrl, workitemid, challenge);
 
                         tsi.HelpUsed = true;
                     }
                 }
+            }
+            else
+            {
+                if (helpTagFound)
+                {
+                    await PatchWithHelpNotAvailableComment(vstsUrl, workitemid);
+                }
+            }
             await _context.SaveChangesAsync();
             return Accepted(tsi);
         }
 
-
+        private async Task PatchWithHelpComment(string vstsUrl, int workitemid, Challenge challenge)
+        {
+            await Patch($"{vstsUrl}_apis/wit/workitems/{workitemid}?api-version=4.1",
+                                                     @"
+[
+  {
+    ""op"": ""add"",
+    ""path"": ""/fields/System.History"",
+    ""value"": ""You requested help for this achievement. You can find it here: " + challenge.HelpUrl + @"""
+  }
+]
+");
+        }
+        private async Task PatchWithHelpNotAvailableComment(string vstsUrl, int workitemid)
+        {
+            await Patch($"{vstsUrl}_apis/wit/workitems/{workitemid}?api-version=4.1",
+                                                     @"
+[
+  {
+    ""op"": ""add"",
+    ""path"": ""/fields/System.History"",
+    ""value"": ""You requested help for this achievement, but because it is a BONUS challenge, there is no help available.""
+  }
+]
+");
+        }
     }
 }

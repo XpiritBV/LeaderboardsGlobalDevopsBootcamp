@@ -21,16 +21,15 @@
         {
             var venue = selectedVenue == null ? $"({Model.TeamScores[i].Venue})" : "";
 
-            <li class="lbitem">
-                <div class="lbrank">@(i + 1)</div>
-                <div class="lbscore">@Model.TeamScores[i].Score</div>
-                <div class="lbteam">
-                    <div class="row">
-                        <div class="col-sm-6">@Model.TeamScores[i].Team <span class="lbvenue">@venue</span></div>
-                        <div class="col-sm-2">Done: @Model.TeamScores[i].DoneCount</div>
-                        <div class="col-sm-2">Commited: @Model.TeamScores[i].CommitedCount</div>
-                        <div class="col-sm-2">Approved: @Model.TeamScores[i].ApprovedCount</div>
-                    </div>
+        <li class="lbitem">
+            <div class="lbrank">@(i + 1)</div>
+            <div class="lbscore">@Model.TeamScores[i].Score</div>
+            <div class="lbteam">
+                <div class="row">
+                    <div class="col-sm-6">@Model.TeamScores[i].Team <span class="lbvenue">@venue</span></div>
+                    <div class="col-sm-2">Done: @Model.TeamScores[i].DoneCount</div>
+                    <div class="col-sm-2">Committed: @Model.TeamScores[i].CommitedCount</div>
+                    <div class="col-sm-2">Approved: @Model.TeamScores[i].ApprovedCount</div>
                 </div>
             </li>
         }

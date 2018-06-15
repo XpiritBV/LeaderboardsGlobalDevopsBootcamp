@@ -65,7 +65,7 @@ namespace ChallengesUpdater
             Console.WriteLine();
 
             var processedChallenges = new List<string>();
-            for (int i = 2; i < contents.Length - 1; i++)
+            for (int i = 2; i <= contents.Length - 1; i++)
             {
                 // line should have 2 elements
                 var lineParts = contents[i].Split(",");
@@ -97,7 +97,7 @@ namespace ChallengesUpdater
             {
                 var challengeName = ExtractChallengeName(story.Filename);
 
-                if (processedChallenges.IndexOf(challengeName) == -1 && _context.Challenge.FirstOrDefault(item => item.Name == challengeName) == null)
+                if (processedChallenges.IndexOf(challengeName) == -1 && _context.Challenge.FirstOrDefault(item => item.Name == challengeName) == null && story.StoryType != StoryType.Feature)
                 {
                     // add this missing challenge to the db
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -27,7 +28,7 @@ namespace gdbcLeaderBoard.Models
         public Challenge Challenge { get; set; }
         [Required]
         public int TeamID { get; set; }
-        public Team Team { get; set; }
+        public virtual Team Team { get; set; }
         public bool HelpUsed { get; set; }
         public string Status { get; set; }
     }
@@ -41,7 +42,9 @@ namespace gdbcLeaderBoard.Models
         [Required]
         public int VenueID { get; set; }
         public Venue Venue { get; set; }
-        public ICollection<TeamScoreItem> Scores { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<TeamScoreItem> Scores { get; set; }
     }
 
     public class Venue
