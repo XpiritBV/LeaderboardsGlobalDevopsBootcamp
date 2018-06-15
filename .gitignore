@@ -231,3 +231,5 @@ web.*.config
 *.d.ts
 *.js.map
 !**/customTypings/**/*.d.ts
+
+gdbcLeaderBoard/gdbcLeaderBoard/obj/Debug/netcoreapp1.1/gdbcLeaderBoard.csproj.FileListAbsolute.txt
