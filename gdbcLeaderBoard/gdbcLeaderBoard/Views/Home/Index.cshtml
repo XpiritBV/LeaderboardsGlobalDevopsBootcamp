@@ -19,7 +19,14 @@
                 <div class="lbscore">@Model.VenueScores[i].Score</div>
             }
             <div class="lbteam"><a href="/Home/Teams?Id=@Model.VenueScores[i].Venue">@Model.VenueScores[i].Venue</a></div>
-            <div class="lbteam" align="right">@Model.VenueScores[i].nrTeams teams</div>
+            @if (@Model.VenueScores[i].nrTeams == 1)
+            {
+                <div class="lbteam" align="right">@Model.VenueScores[i].nrTeams team</div>
+            }
+            else
+            {
+                <div class="lbteam" align="right">@Model.VenueScores[i].nrTeams teams</div>
+            }
         </li>
         }
     </ul>
