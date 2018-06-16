@@ -189,7 +189,7 @@ namespace gdbcLeaderBoard.Controllers
                 }
             }
             await _context.SaveChangesAsync();
-            return Accepted(tsi);
+            return Accepted();
         }
 
         private async Task PatchWithHelpComment(string vstsUrl, int workitemid, Challenge challenge)
