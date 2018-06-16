@@ -11,6 +11,11 @@ namespace gdbcLeaderBoard.Helpers
         private static List<string> IgnoreTags = new List<string> { "required", "help" };
         public static string GetUniqueTag(string from)
         {
+            if (string.IsNullOrWhiteSpace(from))
+            {
+                return "";
+            }
+
             var splitted = from.Split(';');
 
             foreach (var tag in splitted)

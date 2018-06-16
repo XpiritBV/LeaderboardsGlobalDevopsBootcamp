@@ -18,6 +18,24 @@ namespace gdbcLeaderBoard.UnitTests
         }
 
         [TestMethod]
+        public void EmptyTagHelperTest()
+        {
+            var vstsTags = "";
+            var uniqueTag = TagHelper.GetUniqueTag(vstsTags);
+
+            Assert.IsTrue(uniqueTag == "");
+        }
+
+        [TestMethod]
+        public void NullTagHelperTest()
+        {
+            string vstsTags = null;
+            var uniqueTag = TagHelper.GetUniqueTag(vstsTags);
+
+            Assert.IsTrue(uniqueTag == "");
+        }
+
+        [TestMethod]
         public void DefaultTagHelperNoSpacesTest()
         {
             var vstsTags = $"F001-P001;{DefaultUniqueTag }";
