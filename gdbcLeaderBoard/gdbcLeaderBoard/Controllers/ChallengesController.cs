@@ -40,7 +40,6 @@ namespace gdbcLeaderBoard.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Post([FromBody]WorkItemUpdate item)
         {
-            return Ok();
             var vstsUrl = item.resourceContainers.collection.baseUrl;
 
             int workitemid = item.resource.workItemId;
